@@ -1,8 +1,13 @@
 
 # load modules
+from urllib import request
+from lxml import html
 from discord.ext import commands
 import os
 import traceback
+import hashlib
+import json
+
 
 # init settings
 bot = commands.Bot(command_prefix='/')
