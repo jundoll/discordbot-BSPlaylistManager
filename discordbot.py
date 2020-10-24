@@ -3,7 +3,6 @@
 from discord.ext import commands
 import os
 import traceback
-import cmd.download as dl
 
 
 # init settings
@@ -23,11 +22,6 @@ async def on_command_error(ctx, error):
 @bot.command()
 async def ping(ctx):
     await ctx.send('pong')
-
-
-@bot.command()
-async def download(ctx):
-    await dl.reply(ctx)
 
 
 # run
