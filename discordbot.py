@@ -103,40 +103,6 @@ def getSongInfo(url: str):
     return song_dict
 
 
-def get_song_info(songFolderPath: str):
-
-    # init
-    song_dict = dict.fromkeys(['songName', 'hash'])
-
-    # load data
-    # songFolderPath = "C:/Program Files (x86)/Steam/steamapps/common/Beat Saber/Beat Saber_Data/CustomLevels/78cb (Burning Chaos According to the Sun - kolezan)"
-    with open(songFolderPath+"/info.dat") as f:
-        infoDat_json = json.load(f)
-
-    # get songName
-    if "_songName" in infoDat_json.keys():
-        song_dict['songName'] = infoDat_json['_songName']
-
-    # generate hash
-    combinedBytes = bytes()
-    with open(songFolderPath+"/info.dat") as f:
-        combinedBytes = f.read().encode()
-
-    if "_difficultyBeatmapSets" in infoDat_json.keys():
-        for mapSets in infoDat_json['_difficultyBeatmapSets']:
-            if "_difficultyBeatmaps" in mapSets.keys():
-                for maps in mapSets["_difficultyBeatmaps"]:
-                    if "_beatmapFilename" in maps.keys():
-                        with open(songFolderPath+"/"+maps["_beatmapFilename"]) as f:
-                            combinedBytes = combinedBytes + f.read().encode()
-
-    hash = hashlib.sha1(combinedBytes).hexdigest()
-    song_dict['hash'] = hash
-
-    # return
-    return hash
-
-
 # set command
 @bot.event
 async def on_command_error(ctx, error):
@@ -151,12 +117,12 @@ async def ping(ctx):
     await ctx.send('pong')
 
 
-@bot.command()
-async def add(ctx, arg):
-    playlist_url = myDropbox.get_shared_link()
-    songInfo = getSongInfo(arg)
-    myDropbox.update_playlist(playlist_url, songInfo)
-    await ctx.send("Successfully Adding Song!")
+# @bot.command()
+# async def add(ctx, arg):
+#    playlist_url = myDropbox.get_shared_link()
+#    songInfo = getSongInfo(arg)
+#    myDropbox.update_playlist(playlist_url, songInfo)
+#    await ctx.send("Successfully Adding Song!")
 
 
 @bot.command()
