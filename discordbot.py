@@ -140,7 +140,7 @@ async def add(ctx, arg):
     playlist_url = myDropbox.get_shared_link()
     songInfo = getSongInfo(arg)
     myDropbox.add_song(playlist_url, songInfo)
-    await ctx.send("Successfully Adding Song!")
+    await ctx.send("リストに追加したよ！")
 
 
 @bot.command()
@@ -148,7 +148,7 @@ async def del(ctx, arg):
     playlist_url = myDropbox.get_shared_link()
     songInfo = getSongInfo(arg)
     myDropbox.del_song(playlist_url, songInfo)
-    await ctx.send("Successfully Adding Song!")
+    await ctx.send("リストから削除したよ！")
 
 
 @bot.command()
