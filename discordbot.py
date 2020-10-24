@@ -3,7 +3,6 @@
 from discord.ext import commands
 import os
 import traceback
-import cmd.download as dl
 
 
 # init settings
