@@ -150,12 +150,12 @@ async def ping(ctx):
     await ctx.send('pong')
 
 
-# @bot.command()
-# async def add(ctx, arg):
-#    playlist_url = myDropbox.get_shared_link()
-#    songInfo = getSongInfo(arg)
-#    myDropbox.update_playlist(playlist_url, songInfo)
-#    await ctx.send("Successfully Adding Song!")
+@bot.command()
+async def add(ctx, arg):
+    playlist_url = myDropbox.get_shared_link()
+    songInfo = getSongInfo(arg)
+    myDropbox.update_playlist(playlist_url, songInfo)
+    await ctx.send("Successfully Adding Song!")
 
 
 @bot.command()
