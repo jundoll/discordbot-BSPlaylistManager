@@ -3,7 +3,7 @@
 from discord.ext import commands
 import os
 import traceback
-
+import cmd.download as dl
 
 # init settings
 bot = commands.Bot(command_prefix='/')
@@ -26,7 +26,7 @@ async def ping(ctx):
 
 @bot.command()
 async def download(ctx):
-    await ctx.send('popopopooon')
+    ctx.send('popopopooon')
 
 
 # run
