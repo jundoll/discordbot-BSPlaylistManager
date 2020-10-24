@@ -5,8 +5,8 @@ use) /add ${URL}
 URLは、bsaber.comの曲ページのURLです。
 指定の曲がリストに追加されます。
 
-### /del
-use) /del ${URL}
+### /delete
+use) /delete ${URL}
 URLは、bsaber.comの曲ページのURLです。
 指定の曲がリストから削除されます。
 
