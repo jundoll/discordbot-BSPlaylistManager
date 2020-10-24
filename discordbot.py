@@ -73,7 +73,7 @@ class MyDropbox():
         try:
             playlist['songs'].remove(songInfo)
         except Exception:
-            raise Exception
+            pass
 
         # update playlist
         bytes_playlist = bytes(json.dumps(playlist, separators=(
@@ -144,7 +144,7 @@ async def add(ctx, arg):
 
 
 @bot.command()
-async def del(ctx, arg):
+async def delete(ctx, arg):
     playlist_url = myDropbox.get_shared_link()
     songInfo = getSongInfo(arg)
     myDropbox.del_song(playlist_url, songInfo)
