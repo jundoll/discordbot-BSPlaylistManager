@@ -26,7 +26,7 @@ async def ping(ctx):
 
 @bot.command()
 async def download(ctx):
-    ctx.send('popopopooon')
+    await ctx.send('popopopoppppo')
 
 
 # run
