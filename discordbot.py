@@ -25,10 +25,5 @@ async def ping(ctx):
     await ctx.send('pong')
 
 
-@bot.command()
-async def download(ctx):
-    await dl.reply(ctx)
-
-
 # run
 bot.run(token)
