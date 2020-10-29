@@ -104,24 +104,18 @@ def getSongInfo(url: str):
     raw_html = data.read()
     format_html = html.fromstring(str(raw_html))
 
-    # 曲名
-    song_name = format_html.xpath(
-        '//*[@id="infinite-article"]/div[1]/div[1]/div[2]/div/div/header/h1')[0].text
-
     # hash値
     dl_url = format_html.xpath(
         '//*[@id="infinite-article"]/div[1]/div[1]/div[2]/div/div/header/div[4]/a[3]/@href')[0]
     hash = dl_url.split('/')[-1].split('.')[0]
 
     # return
-    song_dict = dict.fromkeys(['songName', 'hash'])
-    song_dict['songName'] = song_name
+    song_dict = dict.fromkeys(['hash'])
     song_dict['hash'] = hash
     return song_dict
 
+
 # set command
-
-
 @bot.event
 async def on_command_error(ctx, error):
     orig_error = getattr(error, "original", error)
