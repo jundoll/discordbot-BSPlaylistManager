@@ -1,3 +1,4 @@
+![](https://github.com/jundoll/discordbot-BSPlaylistManager/workflows/Python%20test/badge.svg)
 # discordbot-BSPlaylistManager
 
 ### /add
