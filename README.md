@@ -3,12 +3,12 @@
 
 ### /add
 use) /add ${URL}  
-URLは、bsaber.comの曲ページのURLです。  
+URLは、![bsaber.com](https://bsaber.com/)の曲ページのURLです。  
 指定の曲がリストに追加されます。
 
 ### /delete
 use) /delete ${URL}  
-URLは、bsaber.comの曲ページのURLです。  
+URLは、![bsaber.com](https://bsaber.com/)の曲ページのURLです。  
 指定の曲がリストから削除されます。
 
 ### /download
