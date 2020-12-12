@@ -1,6 +1,7 @@
-![](https://github.com/jundoll/discordbot-BSPlaylistManager/workflows/lint/badge.svg)
 # discordbot-BSPlaylistManager
+![](https://github.com/jundoll/discordbot-BSPlaylistManager/workflows/lint/badge.svg)
 
+## command list
 ### /add
 use) /add ${URL}  
 URLは、[bsaber.com](https://bsaber.com/)の曲ページのURLです。  
