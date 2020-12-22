@@ -1,26 +1,37 @@
 # discordbot-BSPlaylistManager
+<!--
 ![](https://github.com/jundoll/discordbot-BSPlaylistManager/workflows/lint/badge.svg)
+-->
 
-## command list
+## 説明
+discord上でBeat Saberのプレイリストを管理するbotです。  
+herokuとdropboxを利用します。
+
+
+## コマンドリスト
 ### /add
-use) /add ${URL}  
+```
+/add [URL]
+```
 URLは、[bsaber.com](https://bsaber.com/)の曲ページのURLです。  
 指定の曲がリストに追加されます。
 
 ### /delete
-use) /delete ${URL}  
+```
+/delete [URL]
+```
 URLは、[bsaber.com](https://bsaber.com/)の曲ページのURLです。  
 指定の曲がリストから削除されます。
 
-### /download
-use) /download  
+### /dl (or /download)
+```
+/dl
+```
 プレイリストのリンクを返します。
 
-### /dl
-use) /dl  
-/downloadと同じです。
-
 ### /ping
-use) /ping  
+```
+/ping
+```
 pongと返します。
 
