@@ -1,7 +1,4 @@
 # discordbot-BSPlaylistManager
-<!--
-![](https://github.com/jundoll/discordbot-BSPlaylistManager/workflows/lint/badge.svg)
--->
 
 ## 説明
 discord上でBeat Saberのプレイリストを管理するbotです。  
