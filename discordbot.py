@@ -16,7 +16,7 @@ dropbox_token = os.environ['DROPBOX_ACCESS_TOKEN']
 dropbox_path = 'BSPlaylistManager-dev' if is_dev else 'BSPlaylistManager'
 # 読み込むコグの名前を格納しておく。
 INITIAL_EXTENSIONS = [
-    'cogs.Playlist'
+    'cogs.PlaylistManager'
 ]
 
 

@@ -2,7 +2,7 @@ from discord.ext import commands
 
 
 # コグとして用いるクラスを定義。
-class Playlist(commands.Cog):
+class PlaylistManager(commands.Cog):
 
     # Playlistクラスのコンストラクタ。Botを受取り、インスタンス変数として保持。
     def __init__(self, bot):
@@ -39,4 +39,4 @@ class Playlist(commands.Cog):
 
 # Bot本体側からコグを読み込む際に呼び出される関数。
 def setup(bot):
-    bot.add_cog(Playlist(bot))  # PlaylistにBotを渡してインスタンス化し、Botにコグとして登録する。
+    bot.add_cog(PlaylistManager(bot))  # PlaylistにBotを渡してインスタンス化し、Botにコグとして登録する。
