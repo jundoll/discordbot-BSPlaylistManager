@@ -21,7 +21,7 @@ class PlaylistManager(commands.Cog):
         orig_error = getattr(error, "original", error)
         error_msg = ''.join(
             traceback.TracebackException.from_exception(orig_error).format())
-        await ctx.send(error_msg)
+        await ctx.send(error)
 
     # コマンドの作成。コマンドはcommandデコレータで必ず修飾する。
     @commands.command()
