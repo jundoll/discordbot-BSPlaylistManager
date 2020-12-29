@@ -81,6 +81,11 @@ class PlaylistManager(commands.Cog):
         # return console
         await ctx.send("これをお使い！ " + playlistUrl)
 
+    @commands.command()
+    async def help(self, ctx):
+        # return console
+        await ctx.send("使い方はこちらを見てね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager")
+
 
 # Bot本体側からコグを読み込む際に呼び出される関数。
 def setup(bot):
