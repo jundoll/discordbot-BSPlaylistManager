@@ -1,5 +1,6 @@
 
 # load modules
+from typing import Union
 from Domain.Playlist import Playlist, PlaylistTitle
 from Repository.Dropbox.Dropbox import Dropbox
 from Repository.PlaylistRepository import IPlaylistRepository
@@ -12,12 +13,10 @@ class PlaylistRepositoryDropbox(IPlaylistRepository):
         self.dropbox = Dropbox()
 
     # タイトルからプレイリストを読み込む
-    def findPlaylistByTitle(self, playlistTitle: PlaylistTitle) -> Playlist:
+    def findPlaylistByTitle(self, playlistTitle: PlaylistTitle) -> Union[Playlist, None]:
         # タイトルからプレイリスト情報を検索する
         playlistInfo = self.dropbox.findInfoByTitle(playlistTitle)
-        if playlistInfo is None:
-            raise Exception("指定のプレイリストが見つからないよ！")
-        else:
+        if playlistInfo is not None:
             # プレイリスト情報のファイル名に基づきファイルを読み込む
             # （１．ファイル名からファイルパスを取得する）
             # （２．ファイルパスに基づき、json ファイルを読み込む）
