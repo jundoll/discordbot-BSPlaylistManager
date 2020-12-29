@@ -1,10 +1,14 @@
 
 # load modules
+import os
 import traceback
-import discord
 from Application.PlaylistApplicationService import PlaylistApplicationService
 from Application.SongApplicationService import SongApplicationService
 from discord.ext import commands
+
+
+# init settings
+is_dev = os.environ['IS_DEV_BINARY'] == str(1)
 
 
 # コグとして用いるクラスを定義。
@@ -30,7 +34,10 @@ class PlaylistManager(commands.Cog):
                 traceback.TracebackException.from_exception(orig_error).format()))
         else:
             orig_error = getattr(error, "original", error)
-            await ctx.send(orig_error.args[0])
+            if is_dev:
+                await ctx.send(''.join(traceback.TracebackException.from_exception(orig_error).format()))
+            else:
+                await ctx.send(orig_error.args[0])
 
     # コマンドの作成。コマンドはcommandデコレータで必ず修飾する。
     @commands.command()
