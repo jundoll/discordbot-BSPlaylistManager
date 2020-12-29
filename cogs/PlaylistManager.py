@@ -1,5 +1,6 @@
 
 # load modules
+import traceback
 from Application.SongApplicationService import SongApplicationService
 from Application.PlaylistApplicationService import PlaylistApplicationService
 from discord.ext import commands
@@ -14,6 +15,13 @@ class PlaylistManager(commands.Cog):
 
         self.playlistApplicationService = PlaylistApplicationService()
         self.songApplicationService = SongApplicationService()
+
+    @commands.event
+    async def on_command_error(ctx, error):
+        orig_error = getattr(error, "original", error)
+        error_msg = ''.join(
+            traceback.TracebackException.from_exception(orig_error).format())
+        await ctx.send(error_msg)
 
     # コマンドの作成。コマンドはcommandデコレータで必ず修飾する。
     @commands.command()
