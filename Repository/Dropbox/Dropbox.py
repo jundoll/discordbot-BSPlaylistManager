@@ -27,13 +27,6 @@ class Dropbox:
         self.fpathInfoList = "{}/infoList.csv".format(self.dpathInfoList)
         self.dpathPlaylist = "/{}/Playlists".format(dropbox_path)
 
-        # make info list folder if the folder does not exists
-        entryList = self._findPathList(self.dpathInfoList)
-        if len(entryList) == 0:
-            self.dbx.files_create_folder_v2(self.dpathInfoList)
-            self._createInfoList()
-            return
-
         # make playlist folder if the folder does not exists
         entryList = self._findPathList(self.dpathPlaylist)
         if len(entryList) == 0:
@@ -82,6 +75,12 @@ class Dropbox:
 
     # プレイリスト情報一覧を新規作成する
     def _createInfoList(self):
+
+        # make info list folder if the folder does not exists
+        entryList = self._findPathList(self.dpathInfoList)
+        if len(entryList) == 0:
+            self.dbx.files_create_folder_v2(self.dpathInfoList)
+            return
 
         # create info list file
         fileList = self._findPathList(self.fpathInfoList)
@@ -201,9 +200,13 @@ class Dropbox:
         }
 
         # register info
-        with open(self.fpathInfoList, "a") as f:
-            writer = csv.DictWriter(f, ["ID", "FileName", "Title"])
-            writer.writerow(infoDict)
+        try:
+            with open(self.fpathInfoList, "a") as f:
+                writer = csv.DictWriter(f, ["ID", "FileName", "Title"])
+                writer.writerow(infoDict)
+        except FileNotFoundError:
+            self._createInfoList()
+            return
 
     # ----------------------------------
 
