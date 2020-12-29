@@ -43,25 +43,18 @@ class DiscordBot(commands.Bot):
             except Exception:
                 traceback.print_exc()
 
-        # inject startup
-        startUp = StartUp()
-        startUp.set_config()
-
         self.playlistApplicationService = PlaylistApplicationService()
         self.songApplicationService = SongApplicationService()
 
     # set event
-    @commands.event
-    async def on_command_error(self, ctx, error):
-        orig_error = getattr(error, "original", error)
-        error_msg = ''.join(
-            traceback.TracebackException.from_exception(orig_error).format())
-        await ctx.send(error_msg)
+    # @commands.event
+    # async def on_command_error(self, ctx, error):
+    #    orig_error = getattr(error, "original", error)
+    #    error_msg = ''.join(
+    #        traceback.TracebackException.from_exception(orig_error).format())
+    #    await ctx.send(error_msg)
 
     # set command
-    @commands.command()
-    async def ping(self, ctx):
-        await ctx.send('pong')
 
     @commands.group(invoke_without_command=True)
     async def add(self, ctx, arg_title, arg_url):
@@ -103,5 +96,11 @@ class DiscordBot(commands.Bot):
 
 # botのインスタンス化及び起動処理
 if __name__ == '__main__':
+
+    # inject startup
+    startUp = StartUp()
+    startUp.set_config()
+
+    # launch bot
     bot = DiscordBot(command_prefix='/')
     bot.run(token)
