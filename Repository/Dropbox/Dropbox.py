@@ -56,12 +56,17 @@ class Dropbox:
 
         # read info list
         infoList = []
-        with open(self.fpathInfoList) as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                info = self._convertInfoListFromJson(row)
-                infoList += [info]
-        # if the file does not exists or it is empty file
+        try:
+            with open(self.fpathInfoList) as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    info = self._convertInfoListFromJson(row)
+                    infoList += [info]
+        except FileNotFoundError:
+            self._createInfoList()
+            return
+
+        # if the file is empty file
         if len(infoList) == 0:
             self._createInfoList()
             return
