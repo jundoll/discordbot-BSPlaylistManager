@@ -49,26 +49,19 @@ class Dropbox:
             self._createInfoList()
             return
 
-        # get file list
-        fileEntryList = self._findPathList(self.dpathPlaylist+"/", entryList)
-        fileList = [entry.path_lower for entry in fileEntryList]
-
         # read info list
         infoList = []
-        for file in fileList:
-            with open(file) as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    info = PlaylistInfo(
-                        PlaylistId(row["ID"]),
-                        PlaylistFileName(row["FileName"]),
-                        PlaylistTitle(row["Title"]))
-                    infoList += [info]
-                return infoList
-        # if the file does not exists
+        with open(self.fpathInfoList) as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                info = self._convertInfoListFromJson(row)
+                infoList += [info]
+        # if the file does not exists or it is empty file
         if len(infoList) == 0:
             self._createInfoList()
             return
+        else:
+            return infoList
 
     # 指定の文字列を含むフォルダ・ファイルパスの一覧を返す
     def _findPathList(self, keyword: str, entryList: list = list()) -> List[str]:
@@ -83,9 +76,25 @@ class Dropbox:
         # create info list file
         fileList = self._findPathList(self.fpathInfoList)
         if len(fileList) == 0:
-            with open(self.fpathInfoList, "w") as f:
-                writer = csv.DictWriter(f, list(["ID", "FileName", "Title"]))
+            with open(self.fpathInfoList, "x") as f:
+                writer = csv.DictWriter(f, ["ID", "FileName", "Title"])
                 writer.writeheader()
+
+    # プレイリスト情報一覧を json 形式から変換する
+    def _convertInfoListFromJson(self, infoListJson: dict) -> PlaylistInfo:
+
+        # key exists check
+        infoListKeys = ["ID", "FileName", "Title"]
+        if set(infoListJson.keys()) != infoListKeys:
+            raise Exception("プレイリスト情報一覧の読み込み中にエラーが発生したよ！")
+
+        # get info
+        playlistInfo = PlaylistInfo(
+            playlistId=PlaylistId(infoListJson["ID"]),
+            playlistFileName=PlaylistFileName(infoListJson["FileName"]),
+            playlistTitle=PlaylistTitle(infoListJson["Title"])
+        )
+        return playlistInfo
 
     # ----------------------------------
 
@@ -160,40 +169,69 @@ class Dropbox:
 
     # 指定のプレイリスト情報を情報一覧に追加する
     # playlistのように一度読み込んで書き込む方がスマートかも？
-    def registerInfo(self, info: PlaylistInfo):
+    def registerInfo(self, playlistInfo: PlaylistInfo):
+
+        # read info list
+        infoList = self._readInfoList()
+
+        # duplicated check for Id and FileName and Title
+        if playlistInfo.playlistId in [info.playlistId for info in infoList]:
+            raise Exception
+        if playlistInfo.playlistFileName in [info.playlistFileName for info in infoList]:
+            raise Exception
+        if playlistInfo.playlistTitle in [info.playlistTitle for info in infoList]:
+            raise Exception
 
         # convert info into dict
         infoDict = {
-            "ID": info.playlistId,
-            "FileName": info.playlistFileName,
-            "Title": info.playlistTitle
+            "ID": playlistInfo.playlistId,
+            "FileName": playlistInfo.playlistFileName,
+            "Title": playlistInfo.playlistTitle
         }
 
         # register info
-        fileList = self._findPathList(self.fpathInfoList)
-        if len(fileList) == 0:
-            # 新規作成
-            self._createInfoList()
-
         with open(self.fpathInfoList, "a") as f:
-            writer = csv.DictWriter(f, list(infoDict.keys()))
+            writer = csv.DictWriter(f, ["ID", "FileName", "Title"])
             writer.writerow(infoDict)
 
     # ----------------------------------
 
+    def unregisterInfo(self, playlistInfo: PlaylistInfo, playlistFileName: PlaylistFileName = PlaylistFileName("infoList")):
+
+        # read info list
+        infoList = self._readInfoList()
+
+        # unregister info
+        infoList.remove(playlistInfo)
+
+        # unregister info
+        with open(self.fpathInfoList, "w") as f:
+            writer = csv.DictWriter(f, ["ID", "FileName", "Title"])
+            writer.writeheader()
+            for info in infoList:
+                infoDict = {
+                    "ID": info.playlistId,
+                    "FileName": info.playlistFileName,
+                    "Title": info.playlistTitle
+                }
+                writer.writerow(infoDict)
+
+    def deletePlaylist(self, playlistInfo: PlaylistInfo):
+
+        # set file path
+        filePath = "{}/{}.json".format(self.dpathPlaylist,
+                                       playlistInfo.playlistFileName.playlistFileName)
+
+        # delete playlist
+        self.dbx.files_delete(filePath)
+
+    # ----------------------------------
+
     # 指定のパスが存在するかどうかを返す
+
     def _fileExistsInfoList(self, filePath: str) -> bool:
         fileList = self._findPathList(filePath)
         return len(fileList) == 0
-
-    def unregisterInfo(self, info: PlaylistInfo, playlistFileName: PlaylistFileName = PlaylistFileName("infoList")):
-        # set file path
-        filePath = "{}/{}.csv".format(
-            self.dpathInfoList, playlistFileName.playlistFileName)
-        # unregister info
-        with open(filePath, "a") as f:
-            writer = csv.DictWriter(f, ["ID", "FileName", "Title"])
-            writer.writerow(info)
 
     def makePlaylistPath(self):
         pass

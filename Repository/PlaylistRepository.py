@@ -19,8 +19,14 @@ class IPlaylistRepository(ABCMeta):
     def save(self, playlist: Playlist):
         pass
 
+    # 空のプレイリストを新規作成する
     @abstractmethod
     def create(self, playlist: Playlist):
+        pass
+
+    # 指定のプレイリストを削除する
+    @abstractmethod
+    def delete(self, playlist: Playlist):
         pass
 
     @abstractmethod

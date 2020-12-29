@@ -28,18 +28,26 @@ class PlaylistRepositoryDropbox(IPlaylistRepository):
                 playlistInfo.playlistFileName)
             return playlist
 
-    # プレイリストを保存する
+    # 指定のプレイリストを保存する
     def save(self, playlist: Playlist):
         # プレイリストを保存する
         self.dropbox.savePlaylistJson(playlist)
 
-    # プレイリストを新規作成する
+    # 空のプレイリストを新規作成する
     def create(self, playlist: Playlist):
-        # プレイリスト情報を情報一覧に追加
+        # プレイリスト情報を情報一覧に追加する
         self.dropbox.registerInfo(playlist.playlistInfo)
         # プレイリストを保存する
         self.dropbox.savePlaylistJson(playlist)
 
-    # プレイリストを削除する
-    def delete(self, playlistInfo: PlaylistInfo):
-        pass
+    # 指定のプレイリストを削除する
+    def delete(self, playlistTitle: PlaylistTitle):
+        # タイトルからプレイリスト情報を検索する
+        playlistInfo = self.dropbox.findInfoByTitle(playlistTitle)
+        if playlistInfo is None:
+            raise Exception("指定のプレイリストが見つからないよ！")
+        else:
+            # プレイリスト情報を情報一覧から削除する
+            self.dropbox.unregisterInfo(playlistInfo)
+            # プレイリストを削除する
+            self.dropbox.deletePlaylist(playlistInfo)

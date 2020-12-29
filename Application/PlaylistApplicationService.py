@@ -72,25 +72,13 @@ class PlaylistApplicationService:
     # ---------------------
 
     # 既存のプレイリストを削除する
-    def delete(self, keyword: str):
-        
-        playlist = self.search(keyword)
-        # 空の場合はdeleteemptyを呼び出す。
-        self.deleteEmpty()
-        if len(playlist.songs) == 0:
-            # delete
-            pass
-        else:
-            # get backup?
-            pass
+    def delete(self, title: str):
 
-    # タイトルに一致するプレイリストを検索する。ファイル情報を返す。
+        # create new playlist
+        playlistTitle = PlaylistTitle(title)
+        self.playlistRepository.delete(playlistTitle)
 
-    def findInfoByTitle(self, title: str) -> PlaylistInfo:
-        playlist = self.search(keyword)
-
-    def findPathByTitle(self, title: str) -> str:
-        pass
+    # ---------------------
 
     def getDownloadUrl(self, filePath: str) -> str:
         pass
