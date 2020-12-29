@@ -15,10 +15,16 @@ class PlaylistManager(commands.Cog):
         self.playlistApplicationService = PlaylistApplicationService()
         self.songApplicationService = SongApplicationService()
 
+    # error handling
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        orig_error = getattr(error, "original", error)
-        await ctx.send(orig_error.args[0])
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send('そんなコマンド無いよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('入力が間違ってるよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
+        else:
+            orig_error = getattr(error, "original", error)
+            await ctx.send(orig_error.args[0])
 
     # コマンドの作成。コマンドはcommandデコレータで必ず修飾する。
     @commands.command()
