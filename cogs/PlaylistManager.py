@@ -22,6 +22,8 @@ class PlaylistManager(commands.Cog):
             await ctx.send('そんなコマンド無いよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('入力が間違ってるよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send('入力が間違ってるよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
         else:
             orig_error = getattr(error, "original", error)
             await ctx.send(orig_error.args[0])
