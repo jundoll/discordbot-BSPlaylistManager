@@ -17,7 +17,7 @@ class PlaylistManager(commands.Cog):
         self.songApplicationService = SongApplicationService()
 
     @commands.Cog.listener()
-    async def on_command_error(ctx, error):
+    async def on_command_error(self, ctx, error):
         orig_error = getattr(error, "original", error)
         error_msg = ''.join(
             traceback.TracebackException.from_exception(orig_error).format())
