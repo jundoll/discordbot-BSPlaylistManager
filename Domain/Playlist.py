@@ -1,12 +1,8 @@
 
 # load modules
-import os
 from dataclasses import dataclass
 from typing import List
 from Domain.Song import Song
-
-# init settings
-dl_path = os.environ['BS_PLAYLIST_DL_PATH']
 
 
 # definition
