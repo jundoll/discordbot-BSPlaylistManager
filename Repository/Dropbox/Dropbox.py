@@ -27,6 +27,18 @@ class Dropbox:
         self.fpathInfoList = "{}/infoList.csv".format(self.dpathInfoList)
         self.dpathPlaylist = "/{}/Playlists".format(dropbox_path)
 
+        # make info list folder if the folder does not exists
+        entryList = self._findPathList(self.dpathInfoList)
+        if len(entryList) == 0:
+            self.dbx.files_create_folder_v2(self.dpathInfoList)
+            self._createInfoList()
+            return
+
+        # make playlist folder if the folder does not exists
+        entryList = self._findPathList(self.dpathPlaylist)
+        if len(entryList) == 0:
+            self.dbx.files_create_folder_v2(self.dpathPlaylist)
+
     # タイトルからプレイリスト情報を取得する
     def findInfoByTitle(self, playlistTitle: PlaylistTitle) -> Union[PlaylistInfo, None]:
 
@@ -41,14 +53,6 @@ class Dropbox:
 
     # プレイリスト情報一覧を読み込む
     def _readInfoList(self) -> Union[List[PlaylistInfo], None]:
-
-        # get file and folder list
-        entryList = self._findPathList(self.dpathInfoList)
-        # if the folder does not exists
-        if len(entryList) == 0:
-            self.dbx.files_create_folder_v2(self.dpathInfoList)
-            self._createInfoList()
-            return
 
         # read info list
         infoList = []
