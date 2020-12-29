@@ -25,7 +25,9 @@ class PlaylistManager(commands.Cog):
         elif isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument)):
             await ctx.send('入力が間違ってるよ！使い方を確認してね！')
         elif isinstance(error, discord.DiscordException):
-            await ctx.send('想定外のエラーだよ！管理者に伝えてあげてね！\n'.join(traceback.format_exception_only(type(error), error)))
+            orig_error = getattr(error, "original", error)
+            await ctx.send('想定外のエラーだよ！管理者に伝えてあげてね！\n' + ''.join(
+                traceback.TracebackException.from_exception(orig_error).format()))
         else:
             orig_error = getattr(error, "original", error)
             await ctx.send(orig_error.args[0])
