@@ -139,7 +139,7 @@ class Playlist:
             raise Exception
         if not isinstance(self.playlistDescription, PlaylistDescription):
             raise Exception
-        if not isinstance(self.image, Image):
+        if not isinstance(self.image, ImageBase64):
             raise Exception
         if not isinstance(self.songs, list):
             raise Exception
