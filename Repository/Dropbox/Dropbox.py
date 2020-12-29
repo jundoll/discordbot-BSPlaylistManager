@@ -43,10 +43,10 @@ class Dropbox:
     def _readInfoList(self) -> Union[List[PlaylistInfo], None]:
 
         # get file and folder list
-        entryList = self._findPathList(self.dpathPlaylist)
+        entryList = self._findPathList(self.dpathInfoList)
         # if the folder does not exists
         if len(entryList) == 0:
-            self.dbx.files_create_folder_v2(self.dpathPlaylist)
+            self.dbx.files_create_folder_v2(self.dpathInfoList)
             self._createInfoList()
             return
 
