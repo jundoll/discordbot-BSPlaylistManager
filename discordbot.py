@@ -1,87 +1,32 @@
 
 # load modules
-import dropbox
-from urllib import request
-from lxml import html
-from discord.ext import commands
 import os
 import traceback
-import json
-
+import inject
+from discord.ext import commands
+from Application.Playlists.PlaylistApplicationService import PlaylistApplicationService
+from Application.Playlists.SongApplicationService import SongApplicationService
+from Factory.SongFactory import ISongFactory, SongFactory
+from Repository.Dropbox.PlaylistRepositoryDropbox import PlaylistRepositoryDropbox
+from Repository.PlaylistRepository import IPlaylistRepository
 
 # init settings
 token = os.environ['DISCORD_BOT_TOKEN']
-is_dev = os.environ['IS_DEV_BINARY'] == str(1)
-dropbox_token = os.environ['DROPBOX_ACCESS_TOKEN']
-dropbox_path = 'BSPlaylistManager-dev' if is_dev else 'BSPlaylistManager'
 # 読み込むコグの名前を格納しておく。
-INITIAL_EXTENSIONS = [
-    'cogs.PlaylistManager'
-]
+INITIAL_EXTENSIONS = ['cogs.PlaylistManager']
 
 
-# define class
-class MyDropbox():
+class StartUp:
+    # DI Container部（リポジトリの実装クラスを指定する）
 
-    def __init__(self):
-        self.dbx = dropbox.Dropbox(dropbox_token)
-        res = self.dbx.files_list_folder("", recursive=True)
-        for entry in res.entries:
-            if entry.path_display.startswith("/"+dropbox_path+"/"):
-                self.fpath = entry.path_lower
+    # injection設定を指定する
+    def def_inject_config(self, binder):
+        binder.bind(IPlaylistRepository, PlaylistRepositoryDropbox())
+        binder.bind(ISongFactory, SongFactory())
 
-    def get_shared_link(self):
-        links = self.dbx.sharing_list_shared_links(
-            path=self.fpath, direct_only=True).links
-
-        if links is not None:
-            for link in links:
-                return link.url.replace("dl=0", "dl=1")
-
-        return self.__create_shared_link()
-
-    def __create_shared_link(self):
-        setting = dropbox.sharing.SharedLinkSettings(
-            requested_visibility=dropbox.sharing.RequestedVisibility.public)
-        link = self.dbx.sharing_create_shared_link_with_settings(
-            path=self.fpath, settings=setting)
-
-        return link.url.replace("dl=0", "dl=1")
-
-    def add_song(self, url: str, songInfo: dict):
-
-        # load playlist
-        playlist = request.urlopen(url).read()
-        playlist = json.loads(playlist)
-
-        # add song
-        playlist['songs'] += [songInfo]
-        playlist['songs'] = [dict(t) for t in {tuple(
-            d.items()) for d in playlist['songs']}]
-
-        # update playlist
-        bytes_playlist = bytes(json.dumps(playlist, separators=(
-            ',', ':'), ensure_ascii=False), encoding="utf-8")
-        self.dbx.files_upload(bytes_playlist, self.fpath,
-                              mode=dropbox.files.WriteMode.overwrite)
-
-    def del_song(self, url: str, songInfo: dict):
-
-        # load playlist
-        playlist = request.urlopen(url).read()
-        playlist = json.loads(playlist)
-
-        # del song
-        try:
-            playlist['songs'].remove(songInfo)
-        except Exception:
-            pass
-
-        # update playlist
-        bytes_playlist = bytes(json.dumps(playlist, separators=(
-            ',', ':'), ensure_ascii=False), encoding="utf-8")
-        self.dbx.files_upload(bytes_playlist, self.fpath,
-                              mode=dropbox.files.WriteMode.overwrite)
+    # injection設定を適用する関数
+    def set_config(self):
+        inject.configure(self.def_inject_config)
 
 
 class DiscordBot(commands.Bot):
@@ -98,42 +43,14 @@ class DiscordBot(commands.Bot):
             except Exception:
                 traceback.print_exc()
 
-    # define function
-    def getSongInfo(self, url: str):
+        # inject startup
+        startUp = StartUp()
+        startUp.set_config()
 
-        # もし他に引数があったらエラーキャッチしないと。
+        self.playlistApplicationService = PlaylistApplicationService()
+        self.songApplicationService = SongApplicationService()
 
-        # 今のところはbsaber.comだけを受け付ける。
-        # 受け付けないものはエラーを返す（後でキャッチ）
-        try:
-            flag = False
-            for url_split in url.split('/'):
-                if url_split == 'bsaber.com':
-                    flag = True
-            if not flag:
-                raise Exception
-        except Exception:
-            raise Exception
-
-        # スクレイピング
-        data = request.urlopen(url)
-        raw_html = data.read()
-        format_html = html.fromstring(str(raw_html))
-
-        # hash値
-        dl_url = format_html.xpath(
-            '//*[@id="infinite-article"]/div[1]/div[1]/div[2]/div/div/header/div[4]/a[3]/@href')[0]
-        hash = dl_url.split('/')[-1].split('.')[0]
-
-        # return
-        song_dict = dict.fromkeys(['hash'])
-        song_dict['hash'] = hash
-        return song_dict
-
-    # do
-    myDropbox = MyDropbox()
-
-    # set command
+    # set event
     @commands.event
     async def on_command_error(self, ctx, error):
         orig_error = getattr(error, "original", error)
@@ -141,38 +58,50 @@ class DiscordBot(commands.Bot):
             traceback.TracebackException.from_exception(orig_error).format())
         await ctx.send(error_msg)
 
+    # set command
     @commands.command()
     async def ping(self, ctx):
         await ctx.send('pong')
 
-    @commands.command()
-    async def add(self, ctx, arg):
-        playlist_url = self.myDropbox.get_shared_link()
-        songInfo = self.getSongInfo(arg)
-        self.myDropbox.add_song(playlist_url, songInfo)
-        await ctx.send("リストに追加したよ！")
+    @commands.group(invoke_without_command=True)
+    async def add(self, ctx, arg_title, arg_url):
+        # add song to the playlist
+        self.songApplicationService.add(arg_title, arg_url)
+        # return console
+        await ctx.send("タイトル「" + arg_title + "」のプレイリストに追加したよ！")
+        # messageはエラーが出なかった場合のみにしたい。重複のときはエラーにしたい。
+        # 重複--> mapper指定での追加のときはかぶりが多く発生するので悩みどころ。
 
-    @commands.command(aliases=['del'])
-    async def delete(self, ctx, arg):
-        playlist_url = self.myDropbox.get_shared_link()
-        songInfo = self.getSongInfo(arg)
-        self.myDropbox.del_song(playlist_url, songInfo)
-        await ctx.send("リストから削除したよ！")
+    @add.command(alises=['pl', 'playlist'])
+    async def pl_add(self, ctx, arg_title):
+        # get playlist path
+        self.playlistApplicationService.create(arg_title)
+        # return console
+        await ctx.send("プレイリストを作成したよ！タイトル「" + arg_title + "」を使って曲を追加してね！")
+
+    @commands.group(invoke_without_command=True, aliases=['del'])
+    async def delete(self, ctx, arg_title, arg_url):
+        # del song to the playlist
+        self.songApplicationService.delete(arg_title, arg_url)
+        # return console
+        await ctx.send("タイトル「" + arg_title + "」のプレイリストから削除したよ！")
+
+    @delete.command(alises=['pl', 'playlist'])
+    async def pl_del(self, ctx, arg_title):
+        # get playlist path
+        self.playlistApplicationService.delete(arg_title)
+        # return console
+        await ctx.send("タイトル「" + arg_title + "」のプレイリストを削除したよ！")
 
     @commands.command(aliases=['dl'])
-    async def download(self, ctx):
-        playlist_url = self.myDropbox.get_shared_link()
-        await ctx.send("これをお使い！ "+playlist_url)
-
-    # Botの準備完了時に呼び出されるイベント
-    # async def on_ready(self):
-    #    print('-----')
-    #    print(self.user.name)
-    #    print(self.user.id)
-    #    print('-----')
+    async def download(self, ctx, arg_title):
+        # get playlist url
+        playlistUrl = self.playlistApplicationService.getDownloadUrl(arg_title)
+        # return console
+        await ctx.send("これをお使い！ " + playlistUrl)
 
 
-# MyBotのインスタンス化及び起動処理。
+# botのインスタンス化及び起動処理
 if __name__ == '__main__':
     bot = DiscordBot(command_prefix='/')
     bot.run(token)
