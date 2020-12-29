@@ -54,7 +54,6 @@ class PlaylistManager(commands.Cog):
         # 重複--> mapper指定での追加のときはかぶりが多く発生するので悩みどころ。
 
     @add.command()
-    @commands.command(alises=['pl', 'playlist'])
     async def pl_add(self, ctx, arg_title):
         # get playlist path
         self.playlistApplicationService.create(arg_title)
@@ -69,7 +68,6 @@ class PlaylistManager(commands.Cog):
         await ctx.send("タイトル「" + arg_title + "」のプレイリストから削除したよ！")
 
     @delete.command()
-    @commands.command(alises=['pl', 'playlist'])
     async def pl_del(self, ctx, arg_title):
         # get playlist path
         self.playlistApplicationService.delete(arg_title)
