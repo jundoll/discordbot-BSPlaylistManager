@@ -205,7 +205,7 @@ class Dropbox:
                 writer.writerow(infoDict)
         except FileNotFoundError:
             self._createInfoList()
-            return
+            raise Exception("!adfasdfasfd")
 
     # ----------------------------------
 
