@@ -16,7 +16,7 @@ class PlaylistManager(commands.Cog):
         self.playlistApplicationService = PlaylistApplicationService()
         self.songApplicationService = SongApplicationService()
 
-    @commands.Bot.event
+    @commands.Cog.listener()
     async def on_command_error(ctx, error):
         orig_error = getattr(error, "original", error)
         error_msg = ''.join(
