@@ -80,10 +80,12 @@ class Dropbox:
         entryList = self._findPathList(self.dpathInfoList)
         if len(entryList) == 0:
             self.dbx.files_create_folder_v2(self.dpathInfoList)
+            raise Exception("!adfasdfasfd")
 
         # create info list file
         fileList = self._findPathList(self.fpathInfoList)
         if len(fileList) == 0:
+            raise Exception("!adfasdfasfasdfasdfd")
             with open(self.fpathInfoList, "x") as f:
                 writer = csv.DictWriter(f, ["ID", "FileName", "Title"])
                 writer.writeheader()
@@ -205,7 +207,6 @@ class Dropbox:
                 writer.writerow(infoDict)
         except FileNotFoundError:
             self._createInfoList()
-            raise Exception("!adfasdfasfd")
 
     # ----------------------------------
 
