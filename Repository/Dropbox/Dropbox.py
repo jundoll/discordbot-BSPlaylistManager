@@ -185,12 +185,13 @@ class Dropbox:
         infoList = self._readInfoList()
 
         # duplicated check for Id and FileName and Title
-        if playlistInfo.playlistId in [info.playlistId for info in infoList]:
-            raise Exception
-        if playlistInfo.playlistFileName in [info.playlistFileName for info in infoList]:
-            raise Exception
-        if playlistInfo.playlistTitle in [info.playlistTitle for info in infoList]:
-            raise Exception
+        if infoList is not None:
+            if playlistInfo.playlistId in [info.playlistId for info in infoList]:
+                raise Exception
+            if playlistInfo.playlistFileName in [info.playlistFileName for info in infoList]:
+                raise Exception
+            if playlistInfo.playlistTitle in [info.playlistTitle for info in infoList]:
+                raise Exception
 
         # convert info into dict
         infoDict = {
