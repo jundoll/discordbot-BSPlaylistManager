@@ -24,7 +24,7 @@ class IPlaylistRepository(metaclass=ABCMeta):
 
     # 指定のプレイリストを削除する
     @abstractmethod
-    def delete(self, playlist: Playlist):
+    def delete(self, playlistTitle: PlaylistTitle):
         pass
 
     # 指定のプレイリストのダウンロードURLを取得する
