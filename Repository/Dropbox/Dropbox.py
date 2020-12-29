@@ -80,7 +80,6 @@ class Dropbox:
         entryList = self._findPathList(self.dpathInfoList)
         if len(entryList) == 0:
             self.dbx.files_create_folder_v2(self.dpathInfoList)
-            return
 
         # create info list file
         fileList = self._findPathList(self.fpathInfoList)
