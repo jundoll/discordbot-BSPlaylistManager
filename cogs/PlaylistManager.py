@@ -1,14 +1,8 @@
 
 # load modules
-import os
-import traceback
-import inject
 from Application.SongApplicationService import SongApplicationService
 from Application.PlaylistApplicationService import PlaylistApplicationService
 from discord.ext import commands
-from Factory.SongFactory import ISongFactory, SongFactory
-from Repository.Dropbox.PlaylistRepositoryDropbox import PlaylistRepositoryDropbox
-from Repository.PlaylistRepository import IPlaylistRepository
 
 
 # コグとして用いるクラスを定義。

@@ -3,8 +3,6 @@
 import os
 import traceback
 import inject
-from Application.SongApplicationService import SongApplicationService
-from Application.PlaylistApplicationService import PlaylistApplicationService
 from discord.ext import commands
 from Factory.SongFactory import ISongFactory, SongFactory
 from Repository.Dropbox.PlaylistRepositoryDropbox import PlaylistRepositoryDropbox
@@ -42,16 +40,6 @@ class DiscordBot(commands.Bot):
                 self.load_extension(cog)
             except Exception:
                 traceback.print_exc()
-
-    # set event
-    # @commands.event
-    # async def on_command_error(self, ctx, error):
-    #    orig_error = getattr(error, "original", error)
-    #    error_msg = ''.join(
-    #        traceback.TracebackException.from_exception(orig_error).format())
-    #    await ctx.send(error_msg)
-
-    # set command
 
 
 # botのインスタンス化及び起動処理
