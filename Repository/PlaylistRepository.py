@@ -5,7 +5,7 @@ from Domain.Playlist import Playlist,  PlaylistTitle
 
 
 # definition
-class IPlaylistRepository(ABCMeta):
+class IPlaylistRepository(metaclass=ABCMeta):
 
     # タイトルからプレイリストを読み込む
     @abstractmethod

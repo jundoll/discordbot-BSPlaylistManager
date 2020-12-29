@@ -6,7 +6,7 @@ from DomainService.SongService import SongService
 
 
 # definition
-class ISongFactory(ABCMeta):
+class ISongFactory(metaclass=ABCMeta):
 
     # URLからSongインスタンスを生成する
     @abstractmethod
