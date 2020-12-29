@@ -78,7 +78,7 @@ class Dropbox:
 
         # make info list folder if the folder does not exists
         entryList = self._findPathList(self.dpathInfoList)
-        raise Exception(entryList)
+        raise Exception(len(entryList))
         if len(entryList) == 0:
             self.dbx.files_create_folder_v2(self.dpathInfoList)
 
