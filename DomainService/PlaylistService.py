@@ -1,14 +1,10 @@
 
 # load modules
-from urllib.request import urlopen
-import datetime
-from urllib.request import Request
-import uuid
-import inject
-from Domain.Playlist import ImageBase64, Playlist, PlaylistInfo, PlaylistTitle
-from Repository.PlaylistRepository import IPlaylistRepository
-from DomainService.SongService import SongService
 import base64
+from urllib.request import urlopen
+import inject
+from Domain.Playlist import ImageBase64, Playlist, PlaylistInfo
+from Repository.PlaylistRepository import IPlaylistRepository
 
 
 # definition
@@ -63,14 +59,9 @@ class PlaylistService:
 
     # ------------------------
 
-    # register info list
-    # ここに定義すべき？微妙。
-    def registerInfoList(self, ):
-        pass
-
     # change info
     def changeInfo(self, keyword: str, info: str):
-        playlist = self.search(keyword)
+        pass
 
     # get playlist
     def show(self) -> Playlist:

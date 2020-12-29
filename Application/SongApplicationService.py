@@ -1,10 +1,8 @@
 
 # load modules
-from Application.Playlists.PlaylistApplicationService import PlaylistApplicationService
-from Factory.SongFactory import ISongFactory
-from Domain.Playlist import PlaylistTitle
 import inject
-from Repository.PlaylistRepository import IPlaylistRepository
+from Factory.SongFactory import ISongFactory
+from Application.PlaylistApplicationService import PlaylistApplicationService
 
 
 # definition

@@ -1,10 +1,8 @@
 
 # load modules
-from importlib.abc import ExecutionLoader
+from Domain.Playlist import Playlist, PlaylistTitle
 from Repository.Dropbox.Dropbox import Dropbox
-from typing import Union
 from Repository.PlaylistRepository import IPlaylistRepository
-from Domain.Playlist import Playlist, PlaylistId, PlaylistInfo, PlaylistTitle
 
 
 # definition
@@ -51,3 +49,8 @@ class PlaylistRepositoryDropbox(IPlaylistRepository):
             self.dropbox.unregisterInfo(playlistInfo)
             # プレイリストを削除する
             self.dropbox.deletePlaylist(playlistInfo)
+
+    # 指定のプレイリストのダウンロードURLを取得する
+    def getDownloadUrl(self, playlistTitle: PlaylistTitle) -> str:
+        url = self.dropbox.getSharedLink(playlistTitle)
+        return url

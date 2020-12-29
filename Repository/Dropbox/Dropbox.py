@@ -1,14 +1,14 @@
 
 # load modules
-from Domain.Song import Song
-from typing import Dict, List, Union
-from Domain.Playlist import ImageBase64, Playlist, PlaylistAuthor, PlaylistDescription, PlaylistFileName, PlaylistId, PlaylistInfo, PlaylistTitle
 import csv
 import json
 import os
+from typing import List, Union
 from urllib import request
-
 import dropbox
+from Domain.Playlist import ImageBase64, Playlist, PlaylistAuthor, PlaylistDescription, PlaylistFileName, PlaylistId, PlaylistInfo, PlaylistTitle
+from Domain.Song import Song
+
 
 # init settings
 is_dev = os.environ['IS_DEV_BINARY'] == str(1)
@@ -19,6 +19,7 @@ dropbox_path = 'BSPlaylistManager-dev' if is_dev else 'BSPlaylistManager'
 # definition
 class Dropbox:
     # dropboxもapplicationserviceを作ってもいいかもしれない
+    # 上の階層でやるべき処理がこちらで集約されている気がする。要見直し。
 
     def __init__(self):
         self.dbx = dropbox.Dropbox(dropbox_token)
@@ -227,8 +228,40 @@ class Dropbox:
 
     # ----------------------------------
 
-    # 指定のパスが存在するかどうかを返す
+    def getSharedLink(self, playlistTitle: PlaylistTitle) -> str:
 
+        # find info by title
+        info = self.findInfoByTitle(playlistTitle)
+        if info is None:
+            raise Exception("指定のプレイリストが見つからないよ！")
+
+        # set file path
+        filePath = "{}/{}.json".format(self.dpathPlaylist,
+                                       info.playlistFileName.playlistFileName)
+
+        # get link
+        links = self.dbx.sharing_list_shared_links(
+            path=self.fpath, direct_only=True).links
+
+        if links is not None:
+            for link in links:
+                return link.url.replace("dl=0", "dl=1")
+            raise Exception("リンクの取得に失敗したよ！")
+        else:
+            return self._createSharedLink(filePath)
+
+    def _createSharedLink(self, filePath: str) -> str:
+
+        # create shared link
+        setting = dropbox.sharing.SharedLinkSettings(
+            requested_visibility=dropbox.sharing.RequestedVisibility.public)
+        link = self.dbx.sharing_create_shared_link_with_settings(
+            path=filePath, settings=setting)
+        return link.url.replace("dl=0", "dl=1")
+
+    # ----------------------------------
+
+    # 指定のパスが存在するかどうかを返す
     def _fileExistsInfoList(self, filePath: str) -> bool:
         fileList = self._findPathList(filePath)
         return len(fileList) == 0
@@ -262,21 +295,3 @@ class Dropbox:
         for entry in res.entries:
             if entry.path_display.startswith("/"+dropbox_path+"/"):
                 self.fpath = entry.path_lower
-
-    def getSharedLink(self):
-        links = self.dbx.sharing_list_shared_links(
-            path=self.fpath, direct_only=True).links
-
-        if links is not None:
-            for link in links:
-                return link.url.replace("dl=0", "dl=1")
-
-        return self.createSharedLink()
-
-    def createSharedLink(self):
-        setting = dropbox.sharing.SharedLinkSettings(
-            requested_visibility=dropbox.sharing.RequestedVisibility.public)
-        link = self.dbx.sharing_create_shared_link_with_settings(
-            path=self.fpath, settings=setting)
-
-        return link.url.replace("dl=0", "dl=1")

@@ -1,8 +1,8 @@
 
 # load modules
-from DomainService.SongService import SongService
-from Domain.Song import Song
 from abc import ABCMeta, abstractmethod
+from Domain.Song import Song
+from DomainService.SongService import SongService
 
 
 # definition

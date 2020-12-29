@@ -1,7 +1,7 @@
 
 # load modules
-from Domain.Song import Song
 from urllib import request
+from Domain.Song import Song
 from lxml import html
 
 

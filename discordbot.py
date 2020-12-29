@@ -3,9 +3,9 @@
 import os
 import traceback
 import inject
+from Application.SongApplicationService import SongApplicationService
+from Application.PlaylistApplicationService import PlaylistApplicationService
 from discord.ext import commands
-from Application.Playlists.PlaylistApplicationService import PlaylistApplicationService
-from Application.Playlists.SongApplicationService import SongApplicationService
 from Factory.SongFactory import ISongFactory, SongFactory
 from Repository.Dropbox.PlaylistRepositoryDropbox import PlaylistRepositoryDropbox
 from Repository.PlaylistRepository import IPlaylistRepository

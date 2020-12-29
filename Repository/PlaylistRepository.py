@@ -1,9 +1,7 @@
 
 # load modules
 from abc import ABCMeta, abstractmethod
-from typing import Union
-
-from Domain.Playlist import Playlist,  PlaylistId, PlaylistTitle
+from Domain.Playlist import Playlist,  PlaylistTitle
 
 
 # definition
@@ -29,7 +27,7 @@ class IPlaylistRepository(ABCMeta):
     def delete(self, playlist: Playlist):
         pass
 
+    # 指定のプレイリストのダウンロードURLを取得する
     @abstractmethod
-    def findPlaylistId(self, playlistId: PlaylistId) -> Union[Playlist, None]:
+    def getDownloadUrl(self, playlistTitle: PlaylistTitle) -> str:
         pass
-    # 存在したらそのプレイリスト情報を。存在しなければNoneを返す方が自然か。

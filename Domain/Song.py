@@ -1,7 +1,7 @@
 
 # load modules
-from typing import Dict
 from dataclasses import dataclass
+from typing import Dict
 
 
 # definition
@@ -26,4 +26,3 @@ class Song:
     def convertJson(self) -> Dict[str]:
         val = dict(hash=self.hash)
         return val
-

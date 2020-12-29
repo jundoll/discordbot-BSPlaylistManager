@@ -1,17 +1,11 @@
 
 # load modules
-import inject
-from Repository.PlaylistRepository import IPlaylistRepository
-import base64
-from DomainService.PlaylistService import PlaylistService
-from DomainService.SongService import SongService
-from Temp.PlaylistUpdateCommand import PlaylistUpdateCommand
 import uuid
-from typing import Dict, List
-import datetime
-
+import inject
 from Domain.Playlist import Playlist, PlaylistAuthor, PlaylistDescription, PlaylistFileName, PlaylistId, PlaylistInfo, PlaylistTitle
-from Domain.Song import Song, SongList
+from DomainService.PlaylistService import PlaylistService
+from Repository.PlaylistRepository import IPlaylistRepository
+from Temp.PlaylistUpdateCommand import PlaylistUpdateCommand
 
 
 # definition
@@ -80,8 +74,11 @@ class PlaylistApplicationService:
 
     # ---------------------
 
-    def getDownloadUrl(self, filePath: str) -> str:
-        pass
+    def getDownloadUrl(self, title: str) -> str:
+        playlistTitle = PlaylistTitle(title)
+        self.playlistRepository.getDownloadUrl(playlistTitle)
+
+    # ---------------------
 
     # プレイリスト情報を更新する（今後実装）
     def update(self, command: PlaylistUpdateCommand):
