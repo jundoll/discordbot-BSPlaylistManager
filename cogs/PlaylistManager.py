@@ -1,7 +1,9 @@
 
 # load modules
-from Application.SongApplicationService import SongApplicationService
+import traceback
+import discord
 from Application.PlaylistApplicationService import PlaylistApplicationService
+from Application.SongApplicationService import SongApplicationService
 from discord.ext import commands
 
 
@@ -19,11 +21,11 @@ class PlaylistManager(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send('そんなコマンド無いよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
-        elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('入力が間違ってるよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
-        elif isinstance(error, commands.BadArgument):
-            await ctx.send('入力が間違ってるよ！ここから使い方を確認してみてね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager#readme')
+            await ctx.send('そんなコマンド無いよ！使い方を確認してね！')
+        elif isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument)):
+            await ctx.send('入力が間違ってるよ！使い方を確認してね！')
+        elif isinstance(error, discord.DiscordException):
+            await ctx.send('想定外のエラーだよ！管理者に伝えてあげてね！(' + str(traceback.format_exception_only(type(error), error)) + ')')
         else:
             orig_error = getattr(error, "original", error)
             await ctx.send(orig_error.args[0])
