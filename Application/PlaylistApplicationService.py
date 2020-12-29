@@ -5,7 +5,6 @@ import inject
 from Domain.Playlist import Playlist, PlaylistAuthor, PlaylistDescription, PlaylistFileName, PlaylistId, PlaylistInfo, PlaylistTitle
 from DomainService.PlaylistService import PlaylistService
 from Repository.PlaylistRepository import IPlaylistRepository
-from Temp.PlaylistUpdateCommand import PlaylistUpdateCommand
 
 
 # definition
@@ -79,12 +78,3 @@ class PlaylistApplicationService:
         self.playlistRepository.getDownloadUrl(playlistTitle)
 
     # ---------------------
-
-    # プレイリスト情報を更新する（今後実装）
-    def update(self, command: PlaylistUpdateCommand):
-        pass
-
-
-class PlaylistUpdateCommand:
-    def playlistUpdateCommand(self, id: str):
-        pass
