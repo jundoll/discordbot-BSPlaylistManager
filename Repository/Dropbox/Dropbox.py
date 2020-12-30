@@ -131,9 +131,9 @@ class Dropbox:
         playlistInfoListJson = {"infoList": []}
         for info in playlistInfoList:
             infoDict = {
-                "ID": info.playlistId,
-                "FileName": info.playlistFileName,
-                "Title": info.playlistTitle
+                "ID": info.playlistId.ID,
+                "FileName": info.playlistFileName.playlistFileName,
+                "Title": info.playlistTitle.playlistTitle
             }
             playlistInfoListJson["infoList"].append(infoDict)
 
@@ -144,8 +144,7 @@ class Dropbox:
     def _saveJsonFile(self, jsonData: dict, filePath: str):
 
         # dump する
-        jsonDataBytes = bytes(json.dumps(jsonData,
-                                         separators=(',', ':'), ensure_ascii=False), encoding="utf-8")
+        jsonDataBytes = bytes(json.dumps(jsonData, separators=(',', ':'), ensure_ascii=False), encoding="utf-8")
 
         # json 形式のファイルを保存する
         try:
