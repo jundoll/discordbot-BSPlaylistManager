@@ -1,10 +1,12 @@
 
 # load modules
+import base64
+import io
 import os
 import traceback
+import discord
 from Application.PlaylistApplicationService import PlaylistApplicationService
 from discord.ext import commands
-
 
 # init settings
 is_dev = os.environ['IS_DEV_BINARY'] == str(1)
@@ -46,8 +48,17 @@ class PlaylistOthers(commands.Cog):
     async def download(self, ctx, arg_title):
         # get playlist url
         playlistUrl = self.playlistApplicationService.getDownloadUrl(arg_title)
+        # get playlist
+        playlist = self.playlistApplicationService.find(arg_title)
+        # make embed
+        description = "Title: {}\nAuthor: {}\nDescription: \n".format(
+            arg_title, playlist.playlistAuthor.playlistAuthor, playlist.playlistDescription.playlistDescription)
+        #image = io.BytesIO(base64.b64decode(playlist.image.image.split(";base64,")[1].encode('utf-8')))
+        #file = discord.File(image)
+        embed = discord.Embed(description=description, color=0x00ff00)
+        # embed.set_thumbnail(url="attachment://image")
         # return console
-        await ctx.send("これをお使い！ " + playlistUrl)
+        await ctx.send("これをお使い！ " + playlistUrl, embed=embed)
 
     @commands.command()
     async def usage(self, ctx):
