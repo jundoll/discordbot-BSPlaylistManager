@@ -188,7 +188,7 @@ class Dropbox:
             playlistDescription=PlaylistDescription(
                 playlistJson["playlistDescription"]),
             image=ImageBase64(playlistJson["image"]),
-            songs=[Song(songDict.hash) for songDict in playlistJson["songs"]]
+            songs=[Song(songDict["hash"]) for songDict in playlistJson["songs"]]
         )
 
         # return
