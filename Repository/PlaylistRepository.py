@@ -1,33 +1,59 @@
 
 # load modules
 from abc import ABCMeta, abstractmethod
-from Domain.Playlist import Playlist,  PlaylistTitle
+from typing import List, Union
+from Domain.Playlist import Playlist, PlaylistInfo,  PlaylistTitle
 
 
 # definition
 class IPlaylistRepository(metaclass=ABCMeta):
 
+    # ---------------------
+
+    # タイトルからプレイリスト情報を読み込む
+    @abstractmethod
+    def readInfo(self, playlistTitle: PlaylistTitle) -> Union[PlaylistInfo, None]:
+        pass
+
+    # タイトルからプレイリスト情報一覧を読み込む
+    @abstractmethod
+    def readInfoList(self, playlistTitle: PlaylistTitle) -> Union[List[PlaylistInfo], None]:
+        pass
+
+    # ---------------------
+
+    # プレイリスト情報を登録する
+    @abstractmethod
+    def registerInfo(self, playlistInfo: PlaylistInfo):
+        pass
+
+    # タイトルからプレイリスト情報を抹消する
+    @abstractmethod
+    def unregisterInfo(self, playlistTitle: PlaylistTitle):
+        pass
+
+    # ---------------------
+
     # タイトルからプレイリストを読み込む
     @abstractmethod
-    def findPlaylistByTitle(self, playlistTitle: PlaylistTitle) -> Playlist:
+    def readPlaylist(self, playlistTitle: PlaylistTitle) -> Union[Playlist, None]:
         pass
 
-    # 指定のプレイリストを保存する
+    # ---------------------
+
+    # プレイリストを保存する
     @abstractmethod
-    def save(self, playlist: Playlist):
+    def savePlaylist(self, playlist: Playlist):
         pass
 
-    # 空のプレイリストを新規作成する
+    # プレイリストを削除する
     @abstractmethod
-    def create(self, playlist: Playlist):
+    def deletePlaylist(self, playlistTitle: PlaylistTitle):
         pass
 
-    # 指定のプレイリストを削除する
-    @abstractmethod
-    def delete(self, playlistTitle: PlaylistTitle):
-        pass
+    # ---------------------
 
-    # 指定のプレイリストのダウンロードURLを取得する
+    # タイトルからプレイリストのダウンロードURLを取得する
     @abstractmethod
-    def getDownloadUrl(self, playlistTitle: PlaylistTitle) -> str:
+    def getDownloadUrlByTitle(self, playlistTitle: PlaylistTitle) -> Union[str, None]:
         pass
