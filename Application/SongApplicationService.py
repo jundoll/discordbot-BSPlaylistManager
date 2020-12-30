@@ -66,7 +66,10 @@ class SongApplicationService:
 
         # 対象プレイリストに曲を追加する
         song = self.songFactory.create(url)
-        playlist.songs.remove(song)
+        try:
+            playlist.songs.remove(song)
+        except ValueError:
+            raise Exception("その曲は登録されてないよ！")
 
         # プレイリストを更新する
         playlistApplicationService.save(playlist)
