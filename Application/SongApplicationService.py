@@ -61,8 +61,7 @@ class SongApplicationService:
 
         # タイトルに一致するプレイリストを検索する
         playlistApplicationService = PlaylistApplicationService()
-        playlistTitle = PlaylistTitle(title)
-        playlist = playlistApplicationService.find(playlistTitle)
+        playlist = playlistApplicationService.find(title)
 
         # 対象プレイリストに曲を追加する
         song = self.songFactory.create(url)
