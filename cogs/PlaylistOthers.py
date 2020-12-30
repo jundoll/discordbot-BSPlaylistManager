@@ -1,6 +1,8 @@
 
 # load modules
+from typing import Tuple
 from discord.embeds import Embed
+from discord.file import File
 from Domain.Playlist import ImageBase64, Playlist
 import base64
 import io
@@ -26,7 +28,7 @@ class PlaylistOthers(commands.Cog):
         self.playlistApplicationService = PlaylistApplicationService()
 
     # Base64の画像データを一時ファイルに保存し、そのパスを返す
-    def genEmbedLink(self, playlist: Playlist) -> Embed:
+    def genEmbedLink(self, playlist: Playlist) -> Tuple[File, Embed]:
 
         # テキスト情報を追加する
         embed = discord.Embed(
@@ -37,23 +39,20 @@ class PlaylistOthers(commands.Cog):
             name="Description", value=playlist.playlistDescription.playlistDescription, inline=False)
         embed.add_field(name="Songs", value=len(playlist.songs), inline=False)
 
+        # write image
+        with open("Image/thumbnail.png", 'wb') as f:
+            imageData = base64.b64decode(
+                playlist.image.image.split(";base64,")[1])
+            f.write(imageData)
+
         # 画像情報を追加する
-        with tempfile.NamedTemporaryFile() as tf:
-
-            # write image
-            with open(tf.name, 'wb') as f:
-                imageData = base64.b64decode(
-                    playlist.image.image.split(";base64,")[1])
-                f.write(imageData)
-
-            # 画像情報を追加する
-            embed.set_thumbnail(url=tf.name)
+        file = discord.File("Image/thumbnail.png", filename="thumbnail.png")
+        embed.set_thumbnail(url="attachment://thumbnail.png")
 
         # return
-        return embed
+        return (file, embed)
 
     # error handling
-
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
@@ -83,9 +82,9 @@ class PlaylistOthers(commands.Cog):
         # get playlist
         playlist = self.playlistApplicationService.find(arg_title)
         # make embed
-        embed = self.genEmbedLink(playlist)
+        file, embed = self.genEmbedLink(playlist)
         # return console
-        await ctx.send("これをお使い！ " + playlistUrl, embed=embed)
+        await ctx.send("これをお使い！ " + playlistUrl, file=file, embed=embed)
 
     @commands.command()
     async def usage(self, ctx):
