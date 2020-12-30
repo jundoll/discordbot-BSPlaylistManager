@@ -1,6 +1,7 @@
 
 # load modules
-from Domain.Playlist import ImageBase64
+from discord.embeds import Embed
+from Domain.Playlist import ImageBase64, Playlist
 import base64
 import io
 import os
@@ -25,21 +26,34 @@ class PlaylistOthers(commands.Cog):
         self.playlistApplicationService = PlaylistApplicationService()
 
     # Base64の画像データを一時ファイルに保存し、そのパスを返す
-    def genImageForEmbedLink(self, imageBase64: ImageBase64) -> str:
+    def genEmbedLink(self, playlist: Playlist) -> Embed:
 
-        # Base64の画像データを一時ファイルに保存し、そのパスを返す
-        with tempfile.NamedTemporaryFile(delete=False) as tf:
+        # テキスト情報を追加する
+        embed = discord.Embed(
+            title="Title", description=playlist.playlistTitle.playlistTitle, color=discord.Color.dark_blue())
+        embed.add_field(
+            name="Author", value=playlist.playlistAuthor.playlistAuthor, inline=False)
+        embed.add_field(
+            name="Description", value=playlist.playlistDescription.playlistDescription, inline=False)
+        embed.add_field(name="Songs", value=len(playlist.songs), inline=False)
+
+        # 画像情報を追加する
+        with tempfile.NamedTemporaryFile() as tf:
 
             # write image
             with open(tf.name, 'wb') as f:
                 imageData = base64.b64decode(
-                    imageBase64.image.split(";base64,")[1])
+                    playlist.image.image.split(";base64,")[1])
                 f.write(imageData)
 
-            # return file path
-            return tf.name
+            # 画像情報を追加する
+            embed.set_thumbnail(url=tf.name)
+
+        # return
+        return embed
 
     # error handling
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
@@ -69,14 +83,7 @@ class PlaylistOthers(commands.Cog):
         # get playlist
         playlist = self.playlistApplicationService.find(arg_title)
         # make embed
-        embed = discord.Embed(
-            title="Title", description=arg_title, color=discord.Color.dark_blue())
-        embed.add_field(
-            name="Author", value=playlist.playlistAuthor.playlistAuthor, inline=False)
-        embed.add_field(
-            name="Description", value=playlist.playlistDescription.playlistDescription, inline=False)
-        embed.add_field(name="Songs", value=len(playlist.songs), inline=False)
-        embed.set_thumbnail(url=self.genImageForEmbedLink(playlist.image))
+        embed = self.genEmbedLink(playlist)
         # return console
         await ctx.send("これをお使い！ " + playlistUrl, embed=embed)
 
