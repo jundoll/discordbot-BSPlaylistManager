@@ -51,7 +51,7 @@ class PlaylistOthers(commands.Cog):
         # get playlist
         playlist = self.playlistApplicationService.find(arg_title)
         # make embed
-        description = "Title: {}\nAuthor: {}\nDescription: \nSongs: {}".format(
+        description = "Title: {}\nAuthor: {}\nDescription: {}\nSongs: {}".format(
             arg_title,
             playlist.playlistAuthor.playlistAuthor,
             playlist.playlistDescription.playlistDescription,
