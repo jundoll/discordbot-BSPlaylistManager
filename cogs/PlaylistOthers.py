@@ -50,7 +50,7 @@ class PlaylistOthers(commands.Cog):
         await ctx.send("これをお使い！ " + playlistUrl)
 
     @commands.command()
-    async def help(self, ctx):
+    async def usage(self, ctx):
         # return console
         await ctx.send("使い方はこちらを見てね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager")
 
