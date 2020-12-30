@@ -1,5 +1,6 @@
 
 # load modules
+from Domain.Playlist import ImageBase64
 import base64
 import io
 import os
@@ -7,6 +8,8 @@ import traceback
 import discord
 from Application.PlaylistApplicationService import PlaylistApplicationService
 from discord.ext import commands
+import tempfile
+
 
 # init settings
 is_dev = os.environ['IS_DEV_BINARY'] == str(1)
@@ -20,6 +23,21 @@ class PlaylistOthers(commands.Cog):
         self.bot = bot
 
         self.playlistApplicationService = PlaylistApplicationService()
+
+    # Base64の画像データを一時ファイルに保存し、そのパスを返す
+    def genImageForEmbedLink(self, imageBase64: ImageBase64) -> str:
+
+        # Base64の画像データを一時ファイルに保存し、そのパスを返す
+        with tempfile.NamedTemporaryFile(delete=False) as tf:
+
+            # write image
+            with open(tf.name, 'wb') as f:
+                imageData = base64.b64decode(
+                    imageBase64.image.split(";base64,")[1])
+                f.write(imageData)
+
+            # return file path
+            return tf.name
 
     # error handling
     @commands.Cog.listener()
@@ -51,8 +69,6 @@ class PlaylistOthers(commands.Cog):
         # get playlist
         playlist = self.playlistApplicationService.find(arg_title)
         # make embed
-        #image = io.BytesIO(base64.b64decode(playlist.image.image.split(";base64,")[1].encode('utf-8')))
-        #file = discord.File(image)
         embed = discord.Embed(
             title="Title", description=arg_title, color=discord.Color.dark_blue())
         embed.add_field(
@@ -60,7 +76,7 @@ class PlaylistOthers(commands.Cog):
         embed.add_field(
             name="Description", value=playlist.playlistDescription.playlistDescription, inline=False)
         embed.add_field(name="Songs", value=len(playlist.songs), inline=False)
-        # embed.set_thumbnail(url="attachment://image")
+        embed.set_thumbnail(url=self.genImageForEmbedLink(playlist.image))
         # return console
         await ctx.send("これをお使い！ " + playlistUrl, embed=embed)
 
