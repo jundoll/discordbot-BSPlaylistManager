@@ -125,7 +125,7 @@ class Dropbox:
         # 格納フォルダがなければ作成する
         entryList = self._findPathList(self.dpathInfoList)
         if len(entryList) == 0:
-            self.dbx.files_create_folder_v2(self.dpathInfoList)
+            self.dbx.files_create_folder(self.dpathInfoList)
 
         # プレイリスト情報一覧を json 形式に変換する
         playlistInfoListJson = {"infoList": []}
