@@ -32,6 +32,8 @@ class Dropbox:
 
         # プレイリスト情報一覧を読み込む
         infoList = self.readInfoListByTitle()
+        if infoList is None:
+            return
 
         # タイトルからプレイリスト情報を取得する
         for info in infoList:
