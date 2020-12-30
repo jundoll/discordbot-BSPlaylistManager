@@ -270,7 +270,7 @@ class Dropbox:
         links = self.dbx.sharing_list_shared_links(
             path=filePath, direct_only=True).links
 
-        if links is None:
+        if len(links) == 0:
             # 共有リンクを発行する
             links = [self._createSharedLink(filePath)]
 
