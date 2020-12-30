@@ -55,5 +55,5 @@ class IPlaylistRepository(metaclass=ABCMeta):
 
     # タイトルからプレイリストのダウンロードURLを取得する
     @abstractmethod
-    def getDownloadUrlByTitle(self, playlistTitle: PlaylistTitle) -> Union[str, None]:
+    def getDownloadUrl(self, playlistTitle: PlaylistTitle) -> str:
         pass

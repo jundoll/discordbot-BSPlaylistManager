@@ -99,7 +99,7 @@ class PlaylistRepositoryDropbox(IPlaylistRepository):
     # ---------------------
 
     # タイトルからプレイリストのダウンロードURLを取得する
-    def getDownloadUrl(self, playlistTitle: PlaylistTitle) -> Union[str, None]:
+    def getDownloadUrl(self, playlistTitle: PlaylistTitle) -> str:
 
         # タイトルからプレイリストのダウンロードURLを取得する
         url = self.dropbox.getSharedLink(playlistTitle)

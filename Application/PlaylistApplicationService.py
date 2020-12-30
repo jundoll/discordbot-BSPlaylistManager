@@ -93,7 +93,7 @@ class PlaylistApplicationService:
 
         # タイトルからプレイリストのダウンロードURLを取得する
         playlistTitle = PlaylistTitle(title)
-        url = self.playlistRepository.getDownloadUrlByTitle(playlistTitle)
+        url = self.playlistRepository.getDownloadUrl(playlistTitle)
         return url
 
     # ---------------------

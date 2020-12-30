@@ -251,7 +251,7 @@ class Dropbox:
     # ----------------------------------
 
     # タイトルからプレイリストのダウンロードURLを取得する
-    def getSharedLink(self, playlistTitle: PlaylistTitle) -> Union[str, None]:
+    def getSharedLink(self, playlistTitle: PlaylistTitle) -> str:
 
         # タイトルからプレイリスト情報を取得する
         playlistInfo = self.readInfoByTitle(playlistTitle)
