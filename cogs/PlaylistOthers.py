@@ -51,8 +51,11 @@ class PlaylistOthers(commands.Cog):
         # get playlist
         playlist = self.playlistApplicationService.find(arg_title)
         # make embed
-        description = "Title: {}\nAuthor: {}\nDescription: \n".format(
-            arg_title, playlist.playlistAuthor.playlistAuthor, playlist.playlistDescription.playlistDescription)
+        description = "Title: {}\nAuthor: {}\nDescription: \nSongs: {}".format(
+            arg_title,
+            playlist.playlistAuthor.playlistAuthor,
+            playlist.playlistDescription.playlistDescription,
+            len(playlist.songs))
         #image = io.BytesIO(base64.b64decode(playlist.image.image.split(";base64,")[1].encode('utf-8')))
         #file = discord.File(image)
         embed = discord.Embed(description=description, color=0x00ff00)
