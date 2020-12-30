@@ -36,7 +36,7 @@ class PlaylistOthers(commands.Cog):
         embed.add_field(
             name="Author", value=playlist.playlistAuthor.playlistAuthor, inline=False)
         embed.add_field(
-            name="Description", value=playlist.playlistDescription.playlistDescription, inline=False)
+            name="Description", value=playlist.playlistDescription.playlistDescription+'\u200', inline=False)
         embed.add_field(name="Songs", value=len(playlist.songs), inline=False)
 
         # write image
