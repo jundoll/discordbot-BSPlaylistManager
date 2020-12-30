@@ -1,6 +1,7 @@
 
 # load modules
-from Domain.Playlist import Playlist, PlaylistTitle
+from typing import List, Union
+from Domain.Playlist import Playlist, PlaylistInfo, PlaylistTitle
 from Repository.Dropbox.Dropbox import Dropbox
 from Repository.PlaylistRepository import IPlaylistRepository
 
@@ -11,46 +12,95 @@ class PlaylistRepositoryDropbox(IPlaylistRepository):
     def __init__(self):
         self.dropbox = Dropbox()
 
+    # ---------------------
+
+    # タイトルからプレイリスト情報を読み込む
+    def readInfo(self, playlistTitle: PlaylistTitle) -> Union[PlaylistInfo, None]:
+
+        # タイトルからプレイリスト情報を読み込む
+        playlistInfo = self.dropbox.readInfoByTitle(playlistTitle)
+        return playlistInfo
+
+    # プレイリスト情報一覧を読み込む
+    def readInfoList(self) -> Union[List[PlaylistInfo], None]:
+
+        # プレイリスト情報一覧を読み込む
+        playlistInfoList = self.dropbox.readInfoListByTitle()
+        return playlistInfoList
+
+    # ---------------------
+
+    # プレイリスト情報を登録する
+    def registerInfo(self, playlistInfo: PlaylistInfo):
+
+        # プレイリスト情報一覧を読み込む
+        playlistInfoList = self.readInfoList()
+        if playlistInfoList is None:
+            playlistInfoList = []
+
+        # 重複チェック
+        if len(playlistInfoList) > 0:
+            if playlistInfo.playlistTitle in [info.playlistTitle for info in playlistInfoList]:
+                raise Exception("既に存在するタイトルだよ！違う名前に変えてね！")
+
+        # プレイリスト情報をプレイリスト情報一覧に追加する
+        playlistInfoList.append(playlistInfo)
+
+        # プレイリスト情報一覧を保存する
+        self.dropbox.saveInfoList(playlistInfoList)
+
+    # タイトルからプレイリスト情報を抹消する
+    def unregisterInfo(self, playlistTitle: PlaylistTitle):
+
+        # プレイリスト情報一覧を読み込む
+        playlistInfoList = self.readInfoList()
+        if playlistInfoList is None:
+            playlistInfoList = []
+
+        # タイトルからプレイリスト情報を取得する
+        playlistInfo = self.readInfo(playlistTitle)
+        if playlistInfo is None:
+            return
+
+        # プレイリスト情報をプレイリスト情報一覧から削除する
+        playlistInfoList.remove(playlistInfo)
+
+        # プレイリスト情報一覧を保存する
+        self.dropbox.saveInfoList(playlistInfoList)
+
+    # ---------------------
+
     # タイトルからプレイリストを読み込む
-    def findPlaylistByTitle(self, playlistTitle: PlaylistTitle) -> Playlist:
+    def readPlaylist(self, playlistTitle: PlaylistTitle) -> Union[Playlist, None]:
+
         # タイトルからプレイリスト情報を検索する
-        playlistInfo = self.dropbox.findInfoByTitle(playlistTitle)
+        playlistInfo = self.readInfo(playlistTitle)
         if playlistInfo is None:
-            raise Exception("指定のプレイリストが見つからないよ！")
-        else:
-            # プレイリスト情報のファイル名に基づきファイルを読み込む
-            # （１．ファイル名からファイルパスを取得する）
-            # （２．ファイルパスに基づき、json ファイルを読み込む）
-            # （３．json 形式のプレイリストを Playlist インスタンスに変換する）
-            playlist = self.dropbox.readPlaylistJsonByFileName(
-                playlistInfo.playlistFileName)
-            return playlist
+            return
 
-    # 指定のプレイリストを保存する
-    def save(self, playlist: Playlist):
+        # プレイリスト情報のファイル名に基づきファイルを読み込む
+        playlist = self.dropbox.readPlaylist(playlistInfo)
+        return playlist
+
+    # ---------------------
+
+    # プレイリストを保存する
+    def savePlaylist(self, playlist: Playlist):
+
         # プレイリストを保存する
-        self.dropbox.savePlaylistJson(playlist)
+        self.dropbox.savePlaylist(playlist)
 
-    # 空のプレイリストを新規作成する
-    def create(self, playlist: Playlist):
-        # プレイリスト情報を情報一覧に追加する
-        self.dropbox.registerInfo(playlist.playlistInfo)
-        # プレイリストを保存する
-        self.dropbox.savePlaylistJson(playlist)
+    # タイトルからプレイリストを削除する
+    def deletePlaylist(self, playlistTitle: PlaylistTitle):
 
-    # 指定のプレイリストを削除する
-    def delete(self, playlistTitle: PlaylistTitle):
-        # タイトルからプレイリスト情報を検索する
-        playlistInfo = self.dropbox.findInfoByTitle(playlistTitle)
-        if playlistInfo is None:
-            raise Exception("指定のプレイリストが見つからないよ！")
-        else:
-            # プレイリスト情報を情報一覧から削除する
-            self.dropbox.unregisterInfo(playlistInfo)
-            # プレイリストを削除する
-            self.dropbox.deletePlaylist(playlistInfo)
+        # タイトルからプレイリストを削除する
+        self.dropbox.deletePlaylist(playlistTitle)
 
-    # 指定のプレイリストのダウンロードURLを取得する
+    # ---------------------
+
+    # タイトルからプレイリストのダウンロードURLを取得する
     def getDownloadUrl(self, playlistTitle: PlaylistTitle) -> str:
+
+        # タイトルからプレイリストのダウンロードURLを取得する
         url = self.dropbox.getSharedLink(playlistTitle)
         return url

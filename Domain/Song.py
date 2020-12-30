@@ -23,6 +23,6 @@ class Song:
     def __hash__(self):
         return hash(str(self))
 
-    def convertJson(self) -> Dict[str]:
+    def convertJson(self) -> Dict:
         val = dict(hash=self.hash)
         return val

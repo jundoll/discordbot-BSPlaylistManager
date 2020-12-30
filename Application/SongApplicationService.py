@@ -1,6 +1,7 @@
 
 # load modules
 import inject
+from Domain.Playlist import PlaylistTitle
 from Factory.SongFactory import ISongFactory
 from Application.PlaylistApplicationService import PlaylistApplicationService
 
@@ -19,6 +20,8 @@ class SongApplicationService:
         if not isinstance(self.songFactory, ISongFactory):
             raise Exception
 
+    # ---------------------
+
     # タイトルに一致するプレイリストを検索して、曲を追加する
     # urlがmapperだったらmapperの曲すべてを追加する（今後実装）
     def add(self, title: str, url: str):
@@ -29,20 +32,22 @@ class SongApplicationService:
         if not isinstance(url, str):
             raise Exception
 
-        # 対象プレイリストを検索する
+        # タイトルに一致するプレイリストを検索する
         playlistApplicationService = PlaylistApplicationService()
-        foundPlaylist = playlistApplicationService.find(title)
+        playlistTitle = PlaylistTitle(title)
+        playlist = playlistApplicationService.find(playlistTitle)
 
         # 対象プレイリストに曲を追加する
-        # 重複時のメッセージをつける場合はこの辺をいじる
         song = self.songFactory.create(url)
-        foundPlaylist.songs.append(song)
+        playlist.songs.append(song)
 
         # 対象プレイリストの重複を削除する
-        foundPlaylist.songs = list(set(foundPlaylist.songs))
+        playlist.songs = list(set(playlist.songs))
 
         # プレイリストを更新する
-        playlistApplicationService.save(foundPlaylist)
+        playlistApplicationService.save(playlist)
+
+    # ---------------------
 
     # タイトルに一致するプレイリストを検索して、曲を削除する
     # mapper指定の場合、どこまで消すか？全部になるか...
@@ -54,13 +59,16 @@ class SongApplicationService:
         if not isinstance(url, str):
             raise Exception
 
-        # 対象プレイリストを検索する
+        # タイトルに一致するプレイリストを検索する
         playlistApplicationService = PlaylistApplicationService()
-        foundPlaylist = playlistApplicationService.find(title)
+        playlistTitle = PlaylistTitle(title)
+        playlist = playlistApplicationService.find(playlistTitle)
 
-        # 対象プレイリストから曲を削除する
+        # 対象プレイリストに曲を追加する
         song = self.songFactory.create(url)
-        foundPlaylist.songs.remove(song)
+        playlist.songs.remove(song)
 
         # プレイリストを更新する
-        playlistApplicationService.save(foundPlaylist)
+        playlistApplicationService.save(playlist)
+
+    # ---------------------

@@ -15,7 +15,7 @@ URLは、[bsaber.com](https://bsaber.com/)の曲ページのURLです。
 URLの曲が指定のプレイリストに追加されます。
 <!--mapperのURLを入れたらその人の曲全てを追加するとか。評価などフィルタできた方がいいか？→その基準は共通設定値でいいか。-->
 
-### /add pl (/add playlist)
+### /add pl
 ```
 /add pl [Title]
 ```
@@ -30,7 +30,7 @@ Titleは、管理しているプレイリストのタイトルです。
 URLは、[bsaber.com](https://bsaber.com/)の曲ページのURLです。  
 URLの曲が指定のプレイリストから削除されます。
 
-### /del pl (/del playlist)
+### /del pl (/delete pl)
 ```
 /del pl [Title]
 ```
@@ -42,6 +42,12 @@ Titleは、管理しているプレイリストのタイトルです。
 /dl [Title]
 ```
 指定タイトルのプレイリストのダウンロードリンクを返します。
+
+### /usage
+```
+/usage
+```
+使い方の案内として、このREADMEへのリンクを返します。
 
 ### /ping
 ```
