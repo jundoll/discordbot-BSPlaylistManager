@@ -1,26 +1,57 @@
 # discordbot-BSPlaylistManager
-![](https://github.com/jundoll/discordbot-BSPlaylistManager/workflows/lint/badge.svg)
 
-## command list
+## 説明
+discord上でBeat Saberのプレイリストを管理するbotです。  
+herokuとdropboxを利用しています。
+
+
+## コマンドリスト
 ### /add
-use) /add ${URL}  
+```
+/add [Title] [URL]
+```
+Titleは、管理しているプレイリストのタイトルです。  
 URLは、[bsaber.com](https://bsaber.com/)の曲ページのURLです。  
-指定の曲がリストに追加されます。
+URLの曲が指定のプレイリストに追加されます。
+<!--mapperのURLを入れたらその人の曲全てを追加するとか。評価などフィルタできた方がいいか？→その基準は共通設定値でいいか。-->
 
-### /delete
-use) /delete ${URL}  
+### /add pl
+```
+/add pl [Title]
+```
+Titleは、管理しているプレイリストのタイトルです。  
+指定タイトルのプレイリストが新規作成されます。
+
+### /del (/delete)
+```
+/del [Title] [URL]
+```
+Titleは、管理しているプレイリストのタイトルです。  
 URLは、[bsaber.com](https://bsaber.com/)の曲ページのURLです。  
-指定の曲がリストから削除されます。
+URLの曲が指定のプレイリストから削除されます。
 
-### /download
-use) /download  
-プレイリストのリンクを返します。
+### /del pl (/delete pl)
+```
+/del pl [Title]
+```
+Titleは、管理しているプレイリストのタイトルです。  
+指定タイトルのプレイリストが削除されます。
 
-### /dl
-use) /dl  
-/downloadと同じです。
+### /dl (/download)
+```
+/dl [Title]
+```
+指定タイトルのプレイリストのダウンロードリンクを返します。
+
+### /usage
+```
+/usage
+```
+使い方の案内として、このREADMEへのリンクを返します。
 
 ### /ping
-use) /ping  
-pongと返します。
+```
+/ping
+```
+pongと返します。疎通確認用です。
 
