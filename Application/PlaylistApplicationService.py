@@ -24,14 +24,15 @@ class PlaylistApplicationService:
     # ---------------------
 
     # タイトルからプレイリストを取得する
-    def find(self, playlistTitle: PlaylistTitle) -> Playlist:
+    def find(self, title: str) -> Playlist:
 
         # type check
-        if not isinstance(playlistTitle, PlaylistTitle):
+        if not isinstance(title, str):
             raise Exception
 
         # タイトルからプレイリストを取得する
         playlistService = PlaylistService()
+        playlistTitle = PlaylistTitle(title)
         playlist = playlistService.findPlaylist(playlistTitle)
         return playlist
 
