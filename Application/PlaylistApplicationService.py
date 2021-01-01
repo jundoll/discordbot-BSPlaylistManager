@@ -92,6 +92,10 @@ class PlaylistApplicationService:
     # タイトルからプレイリストのダウンロードURLを取得する
     def getDownloadUrl(self, title: str) -> str:
 
+        # type check
+        if not isinstance(title, str):
+            raise Exception
+
         # タイトルからプレイリストのダウンロードURLを取得する
         playlistTitle = PlaylistTitle(title)
         url = self.playlistRepository.getDownloadUrl(playlistTitle)
