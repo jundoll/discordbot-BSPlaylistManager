@@ -102,3 +102,43 @@ class PlaylistApplicationService:
         return url
 
     # ---------------------
+
+    # 
+    def updateFileName(self,title:str,filename:str):
+
+        # type check
+        if not isinstance(title, str):
+            raise Exception
+        if not isinstance(filename, str):
+            raise Exception
+
+    # 
+    def updateTitle(self,trg_title:str,new_title:str):
+
+        # type check
+        if not isinstance(trg_title, str):
+            raise Exception
+        if not isinstance(new_title, str):
+            raise Exception
+
+    # 
+    def updateAuthor(self,title:str,author:str):
+
+        # type check
+        if not isinstance(title, str):
+            raise Exception
+        if not isinstance(author, str):
+            raise Exception
+
+    # 
+    def updateDescription(self,title:str,description:str):
+
+        # type check
+        if not isinstance(title, str):
+            raise Exception
+        if not isinstance(description, str):
+            raise Exception
+
+        
+
+    # ---------------------
