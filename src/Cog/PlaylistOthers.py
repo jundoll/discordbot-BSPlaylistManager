@@ -44,9 +44,9 @@ class PlaylistOthers(commands.Cog):
             embed.add_field(
                 name="Title", value=playlist.title.title, inline=False)
             embed.add_field(
-                name="Author", value=playlist.author.author, inline=False)
+                name="Author", value=playlist.author.author+'\u200b', inline=False)
             embed.add_field(
-                name="Description", value=playlist.description.description, inline=False)
+                name="Description", value=playlist.description.description+'\u200b', inline=False)
             embed.add_field(name="Songs", value=len(
                 playlist.songIDs), inline=False)
 
@@ -78,7 +78,7 @@ class PlaylistOthers(commands.Cog):
         embed.add_field(
             name="Title", value=playlistJson["playlistTitle"], inline=False)
         embed.add_field(
-            name="Author", value=playlistJson["playlistAuthor"], inline=False)
+            name="Author", value=playlistJson["playlistAuthor"]+'\u200b', inline=False)
         embed.add_field(
             name="Description", value=playlistJson["playlistDescription"]+'\u200b', inline=False)
         embed.add_field(name="Songs", value=len(
