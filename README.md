@@ -37,7 +37,7 @@ herokuとdropboxを利用しています。
 |引数|説明|
 |----|----|
 |KEYWORD|プレイリストの検索用キーワードです。|
-|URL|曲による指定とMapperによる指定が可能です。<br>曲の場合は、[beatsaver.com](https://beatsaver.com/)または[bsaber.com](https://bsaber.com/)の各曲ページのURLを指定してください。<br>Mapperの場合は、[beatsaver.com](https://beatsaver.com/)の各MapperページのURLを指定してください。
+|URL|曲による指定とMapperによる指定が可能です。<br>曲の場合は、[beatsaver.com](https://beatsaver.com/)または[bsaber.com](https://bsaber.com/)の各曲のページのURLを指定してください。<br>Mapperの場合は、[beatsaver.com](https://beatsaver.com/)の各MapperのページのURLを指定してください。
 
 <a id="add_pl"></a>
 ### /add pl (/add playlist)
@@ -47,7 +47,7 @@ herokuとdropboxを利用しています。
 指定のプレイリストを新規作成します。
 |引数|説明|
 |----|----|
-|KEYWORD|プレイリストの検索用キーワードです。|
+|KEYWORD|プレイリストの検索用キーワードです。<br>ここで指定したキーワードに基づいて各コマンドでプレイリストを指定します。|
 
 <a id="regist"></a>
 ### /regist (/register)
@@ -55,10 +55,9 @@ herokuとdropboxを利用しています。
 /regist [KEYWORD] ([PLAYLIST_FILE])
 ```
 既存のプレイリストを登録します。  
-プレイリストは次のどちらかで指定してください。  
-プレイリストはjson形式のみ対応しています。
+プレイリストは次のどちらかで指定してください。json形式のみ対応しています。
 1. PLAYLIST_FILE にプレイリストのURLを指定します。
-2. ファイルアップロード時に入力できるコメントにコマンドを指定します。<br>その際、PLAYLIST_FILEは不要です。
+2. ファイルアップロード時に入力するコメント欄にこのコマンドを指定します。<br>その際、PLAYLIST_FILEは不要です。
 
 |引数|説明|
 |----|----|
@@ -74,7 +73,7 @@ herokuとdropboxを利用しています。
 |引数|説明|
 |----|----|
 |KEYWORD|プレイリストの検索用キーワードです。|
-|URL|曲による指定とMapperによる指定が可能です。<br>曲の場合は、[beatsaver.com](https://beatsaver.com/)または[bsaber.com](https://bsaber.com/)の各曲ページのURLを指定してください。<br>Mapperの場合は、[beatsaver.com](https://beatsaver.com/)の各MapperページのURLを指定してください。
+|URL|曲による指定とMapperによる指定が可能です。<br>曲の場合は、[beatsaver.com](https://beatsaver.com/)または[bsaber.com](https://bsaber.com/)の各曲のページのURLを指定してください。<br>Mapperの場合は、[beatsaver.com](https://beatsaver.com/)の各MapperのページのURLを指定してください。
 
 <a id="del_pl"></a>
 ### /del pl (/del playlist)
@@ -91,7 +90,7 @@ herokuとdropboxを利用しています。
 ```
 /rst [KEYWORD]
 ```
-指定のプレイリストを復元します。
+指定のプレイリストを復元します。  
 同じ検索用キーワードのプレイリストが新規作成されるまでは復元可能です。
 |引数|説明|
 |----|----|
@@ -170,8 +169,8 @@ herokuとdropboxを利用しています。
 /upd img [KEYWORD] ([NEW_IMG])
 ```
 指定のプレイリストのサムネイル画像を更新します。  
-画像は次のどちらかで指定してください。
-1. NEW_IMG にサムネイル画像(pngまたはjpeg)のURLを指定します。
+画像は次のどちらかで指定してください。pngまたはjpeg形式のみ対応しています。
+1. NEW_IMG にサムネイル画像のURLを指定します。
 2. ファイルアップロード時に入力できるコメントにコマンドを指定します。<br>その際、NEW_IMGは不要です。
 
 |引数|説明|
