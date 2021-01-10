@@ -82,10 +82,9 @@ class PlaylistRepository(IPlaylistRepository):
                     for i, playlistID in enumerate(playlistDetailDB["playlistID"]):
                         if deletePlaylistID == playlistID:
                             deleteIndice.append(i)
-                    for index in deleteIndice:
-                        del playlistDetailDB["detailID"][index]
-                        del playlistDetailDB["playlistID"][index]
-                        del playlistDetailDB["songID"][index]
+                    del playlistDetailDB["detailID"][deleteIndice]
+                    del playlistDetailDB["playlistID"][deleteIndice]
+                    del playlistDetailDB["songID"][deleteIndice]
                     # save
                     self.handler.saveJsonFile(
                         playlistDetailDB, self.handler.PLAYLIST_DETAIL_DB_PATH)
@@ -306,10 +305,9 @@ class PlaylistRepository(IPlaylistRepository):
             if (playlistID.ID == playlistDetailDB["playlistID"][i]) & (songID.ID == playlistDetailDB["songID"][i]):
                 deleteIndice.append(i)
 
-        for index in deleteIndice:
-            del playlistDetailDB["detailID"][index]
-            del playlistDetailDB["playlistID"][index]
-            del playlistDetailDB["songID"][index]
+        del playlistDetailDB["detailID"][deleteIndice]
+        del playlistDetailDB["playlistID"][deleteIndice]
+        del playlistDetailDB["songID"][deleteIndice]
 
         # save DB
         self.handler.saveJsonFile(
