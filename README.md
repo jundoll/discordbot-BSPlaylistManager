@@ -40,7 +40,7 @@ herokuとdropboxを利用しています。
 |URL|曲による指定とMapperによる指定が可能です。<br>曲の場合は、[beatsaver.com](https://beatsaver.com/)または[bsaber.com](https://bsaber.com/)の各曲ページのURLを指定してください。<br>Mapperの場合は、[beatsaver.com](https://beatsaver.com/)の各MapperページのURLを指定してください。
 
 <a id="add_pl"></a>
-### /add pl
+### /add pl (/add playlist)
 ```
 /add pl [KEYWORD]
 ```
