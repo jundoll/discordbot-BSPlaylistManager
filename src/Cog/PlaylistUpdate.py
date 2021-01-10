@@ -20,11 +20,11 @@ class PlaylistUpdate(commands.Cog):
 
         self.playlistApplicationService = PlaylistApplicationService()
 
-    @commands.group(invoke_without_command=True, aliases=['ch'])
+    @commands.group(invoke_without_command=True, aliases=['up' 'upd'])
     async def update(self, ctx):
-        pass
+        raise commands.BadArgument()
 
-    @update.command()
+    @update.command(aliases=['f', 'fname', 'file', 'name'])
     async def filename(self, ctx, arg_trg_keyword, arg_filename):
 
         # update filename
@@ -39,7 +39,7 @@ class PlaylistUpdate(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @update.command()
+    @update.command(aliases=['k', 'key'])
     async def keyword(self, ctx, arg_trg_keyword, arg_new_keyword):
 
         # update keyword
@@ -54,7 +54,7 @@ class PlaylistUpdate(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @update.command()
+    @update.command(aliases=['t'])
     async def title(self, ctx, arg_trg_keyword, arg_title):
 
         # update title
@@ -69,7 +69,7 @@ class PlaylistUpdate(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @update.command()
+    @update.command(aliases=['a'])
     async def author(self, ctx, arg_trg_keyword, arg_author):
 
         # update author
@@ -84,8 +84,8 @@ class PlaylistUpdate(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @update.command()
-    async def desc(self, ctx, arg_trg_keyword, arg_desc):
+    @update.command(aliases=['d', 'desc'])
+    async def description(self, ctx, arg_trg_keyword, arg_desc):
 
         # update description
         try:
@@ -99,13 +99,14 @@ class PlaylistUpdate(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @update.command()
-    async def img(self, ctx, arg_trg_keyword, arg_url=""):
+    @update.command(aliases=['i', 'img'])
+    async def image(self, ctx, arg_trg_keyword, arg_url=""):
 
         # register playlist
         if len(arg_url) == 0:
-            attachment_url: str = ctx.message.attachments[0].url
-            if attachment_url is None:
+            if ctx.message.attachments:
+                attachment_url: str = ctx.message.attachments[0].url
+            else:
                 await ctx.send("アップロードするときのコメントにコマンドを入れてね！")
                 return
         else:
@@ -113,8 +114,7 @@ class PlaylistUpdate(commands.Cog):
 
         # update image
         try:
-            self.playlistApplicationService.updateImage(
-                arg_trg_keyword, attachment_url)
+            await self.playlistApplicationService.updateImage(arg_trg_keyword, attachment_url)
         except OriginalException as e:
             # return message
             org_msg = getattr(e, "original", e)

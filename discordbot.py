@@ -15,13 +15,13 @@ from src.Repository.Concrete.Dropbox.SongRepository import SongRepository
 
 
 # init settings
-token = os.environ['DISCORD_BOT_TOKEN']
+TOKEN = os.environ['DISCORD_BOT_TOKEN']
 # 読み込むコグの名前を格納しておく。
 INITIAL_EXTENSIONS = [
-    'cogs.PlaylistAdd',
-    'cogs.PlaylistDelete',
-    'cogs.PlaylistUpdate',
-    'cogs.PlaylistOthers'
+    'src.Cog.PlaylistAdd',
+    'src.Cog.PlaylistDelete',
+    'src.Cog.PlaylistUpdate',
+    'src.Cog.PlaylistOthers'
 ]
 
 
@@ -64,4 +64,4 @@ if __name__ == '__main__':
 
     # launch bot
     bot = DiscordBot(command_prefix='/')
-    bot.run(token)
+    bot.run(TOKEN)

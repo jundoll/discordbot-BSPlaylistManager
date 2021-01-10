@@ -49,8 +49,8 @@ class SongRepository(ISongRepository):
             return
 
         # delete
-        for i, songID in enumerate(songDB["songID"]):
-            if songID.ID == songID:
+        for i, ID in enumerate(songDB["songID"]):
+            if songID.ID == ID:
                 del songDB["songID"][i]
                 del songDB["hash"][i]
                 break
@@ -67,8 +67,8 @@ class SongRepository(ISongRepository):
             return
 
         # set Song instance
-        for i, songID in enumerate(songDB["songID"]):
-            if songID.ID == songID:
+        for i, ID in enumerate(songDB["songID"]):
+            if songID.ID == ID:
                 song = Song(
                     songID=songID,
                     hash=SongHash(songDB["hash"][i])

@@ -14,5 +14,5 @@ class IImageFactory(metaclass=ABCMeta):
 
     # 指定ファイルから画像を生成する
     @abstractmethod
-    def convertByImageFile(self, imageUrl: str) -> ImageBase64:
+    async def convertByImageFile(self, imageUrl: str) -> ImageBase64:
         pass

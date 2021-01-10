@@ -22,6 +22,7 @@ class PlaylistAdd(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def add(self, ctx, arg_keyword, arg_url):
+        '''お試し add'''
 
         # add song to playlist that has the keyword
         try:
@@ -34,8 +35,9 @@ class PlaylistAdd(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @add.command()
-    async def pl(self, ctx, arg_title):
+    @add.command(aliases=['p', 'pl'])
+    async def playlist(self, ctx, arg_title):
+        '''お試し add pl'''
 
         # create new playlist
         try:
@@ -48,19 +50,22 @@ class PlaylistAdd(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @commands.command()
-    async def register(self, ctx, arg_keyword):
+    @commands.command(aliases=['reg', 'regist'])
+    async def register(self, ctx, arg_keyword, arg_url=""):
 
         # register playlist
-        attachment_url: str = ctx.message.attachments[0].url
-        if attachment_url is None:
-            await ctx.send("アップロードするときのコメントにコマンドを入れてね！")
-            return
+        if len(arg_url) == 0:
+            if ctx.message.attachments:
+                attachment_url: str = ctx.message.attachments[0].url
+            else:
+                await ctx.send("アップロードするときのコメントにコマンドを入れてね！")
+                return
+        else:
+            attachment_url = arg_url
 
         try:
             await ctx.send("ちょっと時間がかかるかもしれないよ！")
-            self.playlistApplicationService.registerPlaylist(
-                arg_keyword, attachment_url)
+            await self.playlistApplicationService.registerPlaylist(arg_keyword, attachment_url)
         except OriginalException as e:
             # return message
             org_msg = getattr(e, "original", e)

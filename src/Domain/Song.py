@@ -62,7 +62,7 @@ class Song:
     def __post_init__(self):
 
         # type check
-        if not isinstance(self.songID, str):
+        if not isinstance(self.songID, SongID):
             raise Exception
-        if not isinstance(self.hash, str):
+        if not isinstance(self.hash, SongHash):
             raise Exception

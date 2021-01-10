@@ -1,6 +1,7 @@
 
 # load modules
 import base64
+import json
 import os
 import traceback
 from typing import Dict, List, Tuple
@@ -27,33 +28,55 @@ class PlaylistOthers(commands.Cog):
         self.playlistApplicationService = PlaylistApplicationService()
 
     # 複数のプレイリストに対して埋め込みリンクを作成する
-    def _generateSimpleEmbedLink(self, playlists: List[Playlist]) -> List[Embed]:
+    def _generateEmbedLink(self, playlists: List[Playlist]) -> Tuple[List[File], List[Embed], List[str]]:
 
         # prepare return
+        fileList = []
         embedList = []
+        imageFilePathList = []
 
-        for playlist in playlists:
+        for i, playlist in enumerate(playlists):
             # テキスト情報を追加する
             embed = discord.Embed(
-                title="FileName", description=playlist.fileName.filename, color=discord.Color.dark_orange())
-            embed.add_field(name="Keyword", value=playlist.author.author)
-            embed.add_field(name="Title", value=playlist.title.title)
-            embed.add_field(name="Author", value=playlist.author.author)
+                title="FileName", description="{}.json".format(playlist.fileName.filename), color=discord.Color.dark_orange())
+            embed.add_field(
+                name="Keyword", value=playlist.keyword.keyword, inline=False)
+            embed.add_field(
+                name="Title", value=playlist.title.title, inline=False)
+            embed.add_field(
+                name="Author", value=playlist.author.author, inline=False)
+            embed.add_field(
+                name="Description", value=playlist.description.description, inline=False)
             embed.add_field(name="Songs", value=len(
                 playlist.songIDs), inline=False)
 
+            # write image
+            imageFileName = "thumbnail{}.png".format(i)
+            imageFilePath = "Image/{}".format(imageFileName)
+            imageFilePathList.append(imageFilePath)
+            with open(imageFilePath, 'wb') as f:
+                imageData = base64.b64decode(
+                    playlist.image.image.split(";base64,")[1])
+                f.write(imageData)
+
+            file = discord.File(imageFilePath, filename=imageFileName)
+            embed.set_thumbnail(url="attachment://{}".format(imageFileName))
+
             # append
+            fileList.append(file)
             embedList.append(embed)
 
         # return
-        return embedList
+        return (fileList, embedList, imageFilePathList)
 
     # プレイリストの画像付き埋め込みリンクを作成する
-    def _generateFullEmbedLinkByJson(self, playlistJson: Dict) -> Tuple[File, Embed]:
+    def _generateEmbedLinkByJson(self, playlistJson: Dict, playlist: Playlist) -> Tuple[List[File], Embed]:
 
         # テキスト情報を追加する
         embed = discord.Embed(
-            title="Title", description=playlistJson["playlistTitle"], color=discord.Color.dark_blue())
+            title="Keyword", description=playlist.keyword.keyword, color=discord.Color.dark_blue())
+        embed.add_field(
+            name="Title", value=playlistJson["playlistTitle"], inline=False)
         embed.add_field(
             name="Author", value=playlistJson["playlistAuthor"], inline=False)
         embed.add_field(
@@ -67,12 +90,20 @@ class PlaylistOthers(commands.Cog):
                 playlistJson["image"].split(";base64,")[1])
             f.write(imageData)
 
-        # 画像情報を追加する
-        file = discord.File("Image/thumbnail.png", filename="thumbnail.png")
+        # write json
+        with open("downloadPlaylist.json", 'w') as f:
+            json.dump(playlistJson, f)
+
+        # ファイル情報を登録する
+        files = []
+        files.append(discord.File(
+            "Image/thumbnail.png", filename="thumbnail.png"))
+        files.append(discord.File(
+            "downloadPlaylist.json", filename="{}.json".format(playlist.fileName.filename)))
         embed.set_thumbnail(url="attachment://thumbnail.png")
 
         # return
-        return (file, embed)
+        return (files, embed)
 
     # error handling
     @commands.Cog.listener()
@@ -106,7 +137,7 @@ class PlaylistOthers(commands.Cog):
 
         try:
             # get playlist url
-            msg, playlistJson = self.playlistApplicationService.download(
+            msg, playlistJson, playlist = self.playlistApplicationService.download(
                 arg_trg_keyword)
         except OriginalException as e:
             # return message
@@ -118,8 +149,9 @@ class PlaylistOthers(commands.Cog):
             return
 
         # make embed
-        file, embed = self._generateFullEmbedLinkByJson(playlistJson)
-        await ctx.send(msg, file=file, embed=embed)
+        files, embed = self._generateEmbedLinkByJson(playlistJson, playlist)
+        await ctx.send(msg, files=files, embed=embed)
+        os.remove("downloadPlaylist.json")
 
     @ commands.command(aliases=['s'])
     async def search(self, ctx, arg_search_keyword):
@@ -137,9 +169,17 @@ class PlaylistOthers(commands.Cog):
             return
 
         # make embed
-        embedList = self._generateSimpleEmbedLink(playlists)
-        for embed in embedList:
-            await ctx.send(msg, embed=embed)
+        fileList, embedList, pathList = self._generateEmbedLink(playlists)
+        msgFlag = True
+        for file, embed, path in zip(fileList, embedList, pathList):
+            # send message
+            if msgFlag:
+                await ctx.send(msg, file=file, embed=embed)
+                msgFlag = False
+            else:
+                await ctx.send(file=file, embed=embed)
+            # delete file
+            os.remove(path)
 
     @ commands.command()
     async def usage(self, ctx):

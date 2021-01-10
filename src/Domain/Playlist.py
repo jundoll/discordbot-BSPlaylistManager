@@ -8,11 +8,15 @@ from src.Message.Error import OriginalException
 from src.Message.Message import ErrorMessages
 
 
-# definition
+# definition utitlity
+def genStrUUID():
+    return str(uuid.uuid4())
+
+# definition class
 @dataclass(frozen=True)
 class PlaylistID:
 
-    ID: str = field(default=str(uuid.uuid4()))
+    ID: str = field(default_factory=genStrUUID)
 
     def __post_init__(self):
 

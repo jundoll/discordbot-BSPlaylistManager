@@ -16,7 +16,7 @@ class DropboxHandler:
     DROPBOX_PATH = 'BSPlaylistManager-dev' if IS_DEV else 'BSPlaylistManager'
     SONG_DB_PATH = "/{}/song.json".format(DROPBOX_PATH)
     PLAYLIST_DB_PATH = "/{}/playlist.json".format(DROPBOX_PATH)
-    PLAYLIST_DETAIL_DB_PATH = "/{}/playlistJson.json".format(DROPBOX_PATH)
+    PLAYLIST_DETAIL_DB_PATH = "/{}/playlistDetail.json".format(DROPBOX_PATH)
 
     def __init__(self):
         self.dbx = dropbox.Dropbox(self.DROPBOX_TOKEN)
@@ -66,5 +66,6 @@ class DropboxHandler:
         try:
             self.dbx.files_upload(jsonDataBytes, filePath,
                                   mode=dropbox.files.WriteMode.overwrite)
+        except Exception as e:
             raise OriginalException(
                 ErrorMessages.DownloadDropboxFileErrorMessage())

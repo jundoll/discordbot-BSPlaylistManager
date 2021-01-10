@@ -31,13 +31,13 @@ class SongFactory(ISongFactory):
         songs = []
 
         # beat saver (map)
-        if re.search(BEATSAVER_RE_URL_MAP, url.url) is not None:
+        if re.fullmatch(BEATSAVER_RE_URL_MAP, url.url) is not None:
 
             # extract key
             songKey = url.url.split('/')[4]
 
             # set request
-            requestUrl = BEATSAVER_API_MAP_BY_KEY + "/" + songKey
+            requestUrl = BEATSAVER_API_MAP_BY_KEY + songKey
             headers = {"User-Agent": USER_AGENT}
             req = request.Request(requestUrl, headers=headers)
 
@@ -56,13 +56,13 @@ class SongFactory(ISongFactory):
             songs.append(song)
 
         # beat saver (mapper)
-        elif re.search(BEATSAVER_RE_URL_MAPPER, url.url) is not None:
+        elif re.fullmatch(BEATSAVER_RE_URL_MAPPER, url.url) is not None:
 
             # extract ID
             mapperID = url.url.split('/')[4]
 
             # set request
-            requestUrl = BEATSAVER_API_MAP_BY_KEY + "/" + mapperID
+            requestUrl = BEATSAVER_API_MAPPER + mapperID
             headers = {"User-Agent": USER_AGENT}
             req = request.Request(requestUrl, headers=headers)
 
@@ -83,13 +83,13 @@ class SongFactory(ISongFactory):
                 songs.append(song)
 
         # beast saber (map)
-        elif re.search(BEASTSABER_RE_URL_MAP, url.url) is not None:
+        elif re.fullmatch(BEASTSABER_RE_URL_MAP, url.url) is not None:
 
             # extract key
             songKey = url.url.split('/')[4]
 
             # set request
-            requestUrl = BEATSAVER_API_MAP_BY_KEY + "/" + songKey
+            requestUrl = BEATSAVER_API_MAP_BY_KEY + songKey
             headers = {"User-Agent": USER_AGENT}
             req = request.Request(requestUrl, headers=headers)
 
@@ -108,11 +108,18 @@ class SongFactory(ISongFactory):
             songs.append(song)
 
         # beast saber (mapper)
-        elif re.search(BEASTSABER_RE_URL_MAPPER, url.url) is not None:
+        elif re.fullmatch(BEASTSABER_RE_URL_MAPPER, url.url) is not None:
 
             # raise error (beast saberはmapperID管理が異なるため)
             raise OriginalException(
                 ErrorMessages.GetURLForMapperErrorMessage())
+
+        # else
+        else:
+
+            # raise error
+            raise OriginalException(
+                ErrorMessages.InvalidURLErrorMessage())
 
         # return
         return songs
@@ -121,7 +128,7 @@ class SongFactory(ISongFactory):
     def generateByHash(self, hash: SongHash) -> Song:
 
         # set request
-        requestUrl = BEATSAVER_API_MAP_BY_HASH + "/" + hash.hash
+        requestUrl = BEATSAVER_API_MAP_BY_HASH + hash.hash
         headers = {"User-Agent": USER_AGENT}
         req = request.Request(requestUrl, headers=headers)
 

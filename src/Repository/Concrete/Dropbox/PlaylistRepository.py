@@ -1,9 +1,10 @@
 
 # load modules
+import fnmatch
 import re
 from typing import List, Union
-from Message.Error import OriginalException
-from Message.Message import ErrorMessages
+from src.Message.Error import OriginalException
+from src.Message.Message import ErrorMessages
 from src.Domain.Playlist import (ImageBase64, Playlist, PlaylistAuthor, PlaylistDescription,
                                  PlaylistFileName, PlaylistID, PlaylistKeyword, PlaylistTitle, SearchKeyword)
 from src.Domain.Song import SongID
@@ -36,7 +37,7 @@ class PlaylistRepository(IPlaylistRepository):
                 "isDeleted": []
             }
 
-        # insert
+        # insert playlist
         if playlist.playlistID.ID in playlistDB["playlistID"]:
             # プレイリストID UNIQUE制約エラー
             raise OriginalException(
@@ -77,14 +78,21 @@ class PlaylistRepository(IPlaylistRepository):
                     self.handler.PLAYLIST_DETAIL_DB_PATH)
                 if playlistDetailDB is not None:
                     # delete
+                    deleteIndice = []
                     for i, playlistID in enumerate(playlistDetailDB["playlistID"]):
                         if deletePlaylistID == playlistID:
-                            del playlistDetailDB["detailID"][i]
-                            del playlistDetailDB["playlistID"][i]
-                            del playlistDetailDB["songID"][i]
+                            deleteIndice.append(i)
+                    for index in deleteIndice:
+                        del playlistDetailDB["detailID"][index]
+                        del playlistDetailDB["playlistID"][index]
+                        del playlistDetailDB["songID"][index]
                     # save
                     self.handler.saveJsonFile(
                         playlistDetailDB, self.handler.PLAYLIST_DETAIL_DB_PATH)
+
+        # insert song
+        for songID in playlist.songIDs:
+            self.insertSong(playlist.playlistID, songID)
 
         # save DB
         self.handler.saveJsonFile(playlistDB, self.handler.PLAYLIST_DB_PATH)
@@ -98,7 +106,7 @@ class PlaylistRepository(IPlaylistRepository):
             return
 
         # update
-        if playlistID.ID not in playlistDB["playlistID"]:
+        if playlistID.ID in playlistDB["playlistID"]:
             for i, ID in enumerate(playlistDB["playlistID"]):
                 if playlistID.ID == ID:
                     playlistDB["isDeleted"][i] = True
@@ -116,7 +124,7 @@ class PlaylistRepository(IPlaylistRepository):
             return
 
         # update
-        if playlistID.ID not in playlistDB["playlistID"]:
+        if playlistID.ID in playlistDB["playlistID"]:
             for i, ID in enumerate(playlistDB["playlistID"]):
                 if playlistID.ID == ID:
                     playlistDB["isDeleted"][i] = False
@@ -141,11 +149,11 @@ class PlaylistRepository(IPlaylistRepository):
         songIDs = []
         for i, ID in enumerate(playlistDetailDB["playlistID"]):
             if playlistID.ID == ID:
-                songIDs.append(playlistDetailDB["songID"][i])
+                songIDs.append(SongID(playlistDetailDB["songID"][i]))
 
         # set playlist
         for i, ID in enumerate(playlistDB["playlistID"]):
-            if playlistID.ID == ID:
+            if (playlistID.ID == ID) & (not playlistDB["isDeleted"][i]):
                 playlist = Playlist(
                     playlistID=playlistID,
                     fileName=PlaylistFileName(playlistDB["fileName"][i]),
@@ -167,16 +175,12 @@ class PlaylistRepository(IPlaylistRepository):
         playlistDB = self.handler.readJsonFile(self.handler.PLAYLIST_DB_PATH)
         if playlistDB is None:
             return
-        playlistDetailDB = self.handler.readJsonFile(
-            self.handler.PLAYLIST_DETAIL_DB_PATH)
-        if playlistDetailDB is None:
-            return
 
         # get playlistID
         playlistID = ""
         if playlistKeyword.keyword in playlistDB["keyword"]:
             for i, keyword in enumerate(playlistDB["keyword"]):
-                if playlistKeyword.keyword == keyword:
+                if (playlistKeyword.keyword == keyword) & (not playlistDB["isDeleted"][i]):
                     playlistID = playlistDB["playlistID"][i]
                     break
         if len(playlistID) == 0:
@@ -184,9 +188,12 @@ class PlaylistRepository(IPlaylistRepository):
 
         # get song
         songIDs = []
-        for i, ID in enumerate(playlistDetailDB["playlistID"]):
-            if playlistID == ID:
-                songIDs.append(playlistDetailDB["songID"][i])
+        playlistDetailDB = self.handler.readJsonFile(
+            self.handler.PLAYLIST_DETAIL_DB_PATH)
+        if playlistDetailDB is not None:
+            for i, ID in enumerate(playlistDetailDB["playlistID"]):
+                if playlistID == ID:
+                    songIDs.append(SongID(playlistDetailDB["songID"][i]))
 
         # set playlist
         for i, ID in enumerate(playlistDB["playlistID"]):
@@ -212,18 +219,14 @@ class PlaylistRepository(IPlaylistRepository):
         playlistDB = self.handler.readJsonFile(self.handler.PLAYLIST_DB_PATH)
         if playlistDB is None:
             return
-        playlistDetailDB = self.handler.readJsonFile(
-            self.handler.PLAYLIST_DETAIL_DB_PATH)
-        if playlistDetailDB is None:
-            return
 
         # get playlistID
         playlistID = ""
         if playlistKeyword.keyword in playlistDB["keyword"]:
             for i, keyword in enumerate(playlistDB["keyword"]):
-                if (playlistKeyword.keyword == keyword) & (playlistDB["isDeleted"] == isDeleted):
+                if (playlistKeyword.keyword == keyword) & (playlistDB["isDeleted"][i] == isDeleted):
                     playlistID = playlistDB["playlistID"][i]
-                    return playlistID
+                    return PlaylistID(playlistID)
         if len(playlistID) == 0:
             return
 
@@ -236,11 +239,11 @@ class PlaylistRepository(IPlaylistRepository):
             return
 
         # update
-        if playlist.playlistID.ID not in playlistDB["playlistID"]:
+        if playlist.playlistID.ID in playlistDB["playlistID"]:
             for i, ID in enumerate(playlistDB["playlistID"]):
                 if playlist.playlistID.ID == ID:
                     playlistDB["fileName"][i] = playlist.fileName.filename
-                    if playlist.keyword.keyword != playlistDB["keyword"][i]:
+                    if playlistDB["keyword"][i] != playlist.keyword.keyword:
                         if playlist.keyword.keyword in playlistDB["keyword"]:
                             # キーワード UNIQUE制約エラー
                             raise OriginalException(
@@ -279,7 +282,7 @@ class PlaylistRepository(IPlaylistRepository):
         # insert
         if not existsFlag:
             # insert
-            detailIDs = [int(ID)for ID in playlistDetailDB["detailID"]]
+            detailIDs = [0]+[int(ID)for ID in playlistDetailDB["detailID"]]
             playlistDetailDB["detailID"].append(str(1+max(detailIDs)))
             playlistDetailDB["playlistID"].append(playlistID.ID)
             playlistDetailDB["songID"].append(songID.ID)
@@ -298,11 +301,15 @@ class PlaylistRepository(IPlaylistRepository):
             return
 
         # delete song
+        deleteIndice = []
         for i in range(len(playlistDetailDB["detailID"])):
             if (playlistID.ID == playlistDetailDB["playlistID"][i]) & (songID.ID == playlistDetailDB["songID"][i]):
-                del playlistDetailDB["detailID"][i]
-                del playlistDetailDB["playlistID"][i]
-                del playlistDetailDB["songID"][i]
+                deleteIndice.append(i)
+
+        for index in deleteIndice:
+            del playlistDetailDB["detailID"][index]
+            del playlistDetailDB["playlistID"][index]
+            del playlistDetailDB["songID"][index]
 
         # save DB
         self.handler.saveJsonFile(
@@ -323,11 +330,11 @@ class PlaylistRepository(IPlaylistRepository):
         # get playlists
         playlists = []
         for keyword in playlistDB["keyword"]:
-            if re.search(searchKeyword.searchKeyword, keyword) is not None:
+            if re.fullmatch(fnmatch.translate(searchKeyword.searchKeyword), keyword) is not None:
                 playlist = self.findByKeyword(PlaylistKeyword(keyword))
                 playlists.append(playlist)
 
         # return
         return playlists
 
-    # ---------------------
+ # ---------------------

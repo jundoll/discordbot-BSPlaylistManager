@@ -1,6 +1,5 @@
 
 # messages
-from src.Domain.Playlist import PlaylistKeyword
 
 
 class Messages:
@@ -10,16 +9,24 @@ class Messages:
         return "プレイリストに曲を追加したよ！"
 
     @classmethod
-    def addPlaylistMessage(cls, keyword: PlaylistKeyword) -> str:
-        return "プレイリストを作成したよ！キーワード「" + keyword.keyword + "」を使って曲を追加してね！"
+    def addSongsMessage(cls, num: int) -> str:
+        return "プレイリストに" + str(num) + "曲追加したよ！"
 
     @classmethod
-    def registerPlaylistMessage(cls, keyword: PlaylistKeyword) -> str:
-        return "プレイリストを登録したよ！キーワード「" + keyword.keyword + "」を使って曲を追加してね！"
+    def addPlaylistMessage(cls, keyword: str) -> str:
+        return "プレイリストを作成したよ！キーワード「" + keyword + "」を使って指定してね！"
+
+    @classmethod
+    def registerPlaylistMessage(cls, keyword: str) -> str:
+        return "プレイリストを登録したよ！キーワード「" + keyword + "」を使って指定してね！"
 
     @classmethod
     def deleteSongMessage(cls) -> str:
         return "プレイリストから曲を削除したよ！"
+
+    @classmethod
+    def deleteSongsMessage(cls, num: int) -> str:
+        return "プレイリストから" + str(num) + "曲削除したよ！"
 
     @classmethod
     def deletePlaylistMessage(cls) -> str:
@@ -30,8 +37,12 @@ class Messages:
         return "プレイリストを復元したよ！"
 
     @classmethod
-    def updatePlaylistInfoMessage(cls, keyword: PlaylistKeyword) -> str:
-        return "プレイリスト情報を更新したよ！キーワード「" + keyword.keyword + "」を使って曲を追加してね！"
+    def updatePlaylistKeywordInfoMessage(cls, keyword: str) -> str:
+        return "プレイリスト情報を更新したよ！キーワード「" + keyword + "」を使って指定してね！"
+
+    @classmethod
+    def updatePlaylistInfoMessage(cls) -> str:
+        return "プレイリスト情報を更新したよ！"
 
     @classmethod
     def downloadPlaylistMessage(cls) -> str:
@@ -51,6 +62,14 @@ class ExceptionMessages:
     @classmethod
     def alreadyExistsSongExceptionMessage(cls) -> str:
         return "その曲はもう追加済みだよ！"
+
+    @classmethod
+    def nonAddSongMessage(cls) -> str:
+        return "追加する曲は無かったよ！"
+
+    @classmethod
+    def nonDeleteSongMessage(cls) -> str:
+        return "削除する曲は無かったよ！"
 
     @classmethod
     def alreadyExistsPlaylistExceptionMessage(cls) -> str:
@@ -73,14 +92,22 @@ class ErrorMessages:
 
     @classmethod
     def APIErrorMessage(cls) -> str:
-        return "APIの取得に失敗したよ！"
+        return "APIの実行に失敗したよ！"
 
     @classmethod
     def GetURLForMapperErrorMessage(cls) -> str:
-        return "mapper は https://beatsaver.com から検索してね！"
+        return "Mapper は https://beatsaver.com から検索して Mapper のページを指定してね！"
+
+    @classmethod
+    def InvalidURLErrorMessage(cls) -> str:
+        return "曲は https://beatsaver.com か https://bsaber.com からを検索して曲のページを指定してね！\nMapperは https://beatsaver.com からを検索して Mapper のページを指定してね！"
 
     @classmethod
     def DownloadDropboxFileErrorMessage(cls) -> str:
+        return "ファイルの取得に失敗したよ！"
+
+    @classmethod
+    def DownloadImageFileErrorMessage(cls) -> str:
         return "ファイルの取得に失敗したよ！"
 
     @classmethod

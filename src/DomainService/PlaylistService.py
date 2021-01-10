@@ -57,7 +57,6 @@ class PlaylistService:
         if playlist is not None:
             if songID in playlist.songIDs:
                 exists = True
-
         # return
         return exists
 
@@ -70,14 +69,14 @@ class PlaylistService:
         songs = []
         for songID in playlist.songIDs:
             hash = self.songRepository.findHashByID(songID)
-            songs.append({"hash", hash.hash})
+            songs.append({"hash": hash.hash.hash})
 
         # set playlist
         playlistJson = {
-            "playlistTitle": playlist.title,
-            "playlistAuthor": playlist.author,
-            "playlistDescription": playlist.description,
-            "image": playlist.image,
+            "playlistTitle": playlist.title.title,
+            "playlistAuthor": playlist.author.author,
+            "playlistDescription": playlist.description.description,
+            "image": playlist.image.image,
             "songs": songs
         }
 
