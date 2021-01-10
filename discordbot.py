@@ -4,17 +4,24 @@ import os
 import traceback
 import inject
 from discord.ext import commands
-from Factory.SongFactory import ISongFactory, SongFactory
-from Repository.Dropbox.PlaylistRepositoryDropbox import PlaylistRepositoryDropbox
-from Repository.PlaylistRepository import IPlaylistRepository
+from src.Factory.Abstract.ImageFactory import IImageFactory
+from src.Factory.Abstract.SongFactory import ISongFactory
+from src.Factory.Concrete.API.SongFactory import SongFactory
+from src.Factory.Concrete.templateFile.ImageFactory import ImageFactory
+from src.Repository.Abstract.PlaylistRepository import IPlaylistRepository
+from src.Repository.Abstract.SongRepository import ISongRepository
+from src.Repository.Concrete.Dropbox.PlaylistRepository import PlaylistRepository
+from src.Repository.Concrete.Dropbox.SongRepository import SongRepository
+
 
 # init settings
-token = os.environ['DISCORD_BOT_TOKEN']
+TOKEN = os.environ['DISCORD_BOT_TOKEN']
 # 読み込むコグの名前を格納しておく。
 INITIAL_EXTENSIONS = [
-    'cogs.PlaylistAdd',
-    'cogs.PlaylistDelete',
-    'cogs.PlaylistOthers'
+    'src.Cog.PlaylistAdd',
+    'src.Cog.PlaylistDelete',
+    'src.Cog.PlaylistUpdate',
+    'src.Cog.PlaylistOthers'
 ]
 
 
@@ -23,8 +30,10 @@ class StartUp:
 
     # injection設定を指定する
     def def_inject_config(self, binder):
-        binder.bind(IPlaylistRepository, PlaylistRepositoryDropbox())
+        binder.bind(IPlaylistRepository, PlaylistRepository())
         binder.bind(ISongFactory, SongFactory())
+        binder.bind(IImageFactory, ImageFactory())
+        binder.bind(ISongRepository, SongRepository())
 
     # injection設定を適用する関数
     def set_config(self):
@@ -55,4 +64,4 @@ if __name__ == '__main__':
 
     # launch bot
     bot = DiscordBot(command_prefix='/')
-    bot.run(token)
+    bot.run(TOKEN)
