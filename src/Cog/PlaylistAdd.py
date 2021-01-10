@@ -54,14 +54,14 @@ class PlaylistAdd(commands.Cog):
     async def register(self, ctx, arg_keyword, arg_url=""):
 
         # register playlist
-        if len(arg_url) == 0:
-            if ctx.message.attachments:
-                attachment_url: str = ctx.message.attachments[0].url
-            else:
+        if ctx.message.attachments:
+            attachment_url: str = ctx.message.attachments[0].url
+        else:
+            if len(arg_url) == 0:
                 await ctx.send("アップロードするときのコメントにコマンドを入れてね！")
                 return
-        else:
-            attachment_url = arg_url
+            else:
+                attachment_url = arg_url
 
         try:
             await ctx.send("ちょっと時間がかかるかもしれないよ！")
