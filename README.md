@@ -28,8 +28,8 @@ herokuとdropboxを利用しています。
 
 
 ## 各コマンドの説明
+<a id="add"></a> 
 ### /add
-<a id="add"></a>
 ```
 /add [KEYWORD] [URL]
 ```
@@ -39,8 +39,8 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |URL|曲による指定とMapperによる指定が可能です。<br>曲の場合は、[beatsaver.com](https://beatsaver.com/)または[bsaber.com](https://bsaber.com/)の各曲ページのURLを指定してください。<br>Mapperの場合は、[beatsaver.com](https://beatsaver.com/)の各MapperページのURLを指定してください。
 
-### /add pl
 <a id="add_pl"></a>
+### /add pl
 ```
 /add pl [KEYWORD]
 ```
@@ -49,8 +49,8 @@ herokuとdropboxを利用しています。
 |----|----|
 |KEYWORD|プレイリストの検索用キーワードです。|
 
-### /regist (/register)
 <a id="regist"></a>
+### /regist (/register)
 ```
 /regist [KEYWORD] ([PLAYLIST_FILE])
 ```
@@ -65,8 +65,8 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |[option]<br>PLAYLIST_FILE|任意の指定項目です。<br>指定方法1の場合に利用してください。|
 
-### /del (/delete)
 <a id="del"></a>
+### /del (/delete)
 ```
 /del [KEYWORD] [URL]
 ```
@@ -76,8 +76,8 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |URL|曲による指定とMapperによる指定が可能です。<br>曲の場合は、[beatsaver.com](https://beatsaver.com/)または[bsaber.com](https://bsaber.com/)の各曲ページのURLを指定してください。<br>Mapperの場合は、[beatsaver.com](https://beatsaver.com/)の各MapperページのURLを指定してください。
 
-### /del pl (/del playlist)
 <a id="del_pl"></a>
+### /del pl (/del playlist)
 ```
 /del pl [KEYWORD]
 ```
@@ -86,8 +86,8 @@ herokuとdropboxを利用しています。
 |----|----|
 |KEYWORD|プレイリストの検索用キーワードです。|
 
-### /rst (/restore)
 <a id="rst"></a>
+### /rst (/restore)
 ```
 /rst [KEYWORD]
 ```
@@ -97,13 +97,15 @@ herokuとdropboxを利用しています。
 |----|----|
 |KEYWORD|プレイリストの検索用キーワードです。|
 
-### /upd (/up, /update)
 <a id="upd"></a>
+
+### /upd (/up, /update)
 プレイリスト情報を更新します。  
 更新する情報に対応するコマンドを利用してください。
 
-### /upd name (/upd f, /upd file, /upd filename)
 <a id="upd_name"></a>
+
+### /upd name (/upd f, /upd file, /upd filename)
 ```
 /upd name [KEYWORD] [NEW_NAME]
 ```
@@ -113,8 +115,9 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |NEW_NAME|更新後のファイル名です。<br>拡張子(.json)は含めないでください。|
 
-### /upd key (/upd k, /upd keyword)
 <a id="upd_key"></a>
+
+### /upd key (/upd k, /upd keyword)
 ```
 /upd key [KEYWORD] [NEW_KEYWORD]
 ```
@@ -124,8 +127,9 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |NEW_KEYWORD|更新後の検索用キーワードです。|
 
-### /upd title (/upd t)
 <a id="upd_title"></a>
+
+### /upd title (/upd t)
 ```
 /upd title [KEYWORD] [NEW_TITLE]
 ```
@@ -135,8 +139,9 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |NEW_TITLE|更新後のタイトルです。|
 
-### /upd author (/upd a)
 <a id="upd_author"></a>
+
+### /upd author (/upd a)
 ```
 /upd author [KEYWORD] [NEW_AUTHOR]
 ```
@@ -146,8 +151,9 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |NEW_AUTHOR|更新後の作成者名です。|
 
-### /upd desc (/upd d, /upd description)
 <a id="upd_desc"></a>
+
+### /upd desc (/upd d, /upd description)
 ```
 /upd desc [KEYWORD] [NEW_DESC]
 ```
@@ -157,8 +163,9 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |NEW_DESC|更新後の説明です。<br>スペースを空ける場合などは""で囲んでください。|
 
-### /upd img (/upd i, /upd image)
 <a id="upd_img"></a>
+
+### /upd img (/upd i, /upd image)
 ```
 /upd img [KEYWORD] ([NEW_IMG])
 ```
@@ -172,8 +179,9 @@ herokuとdropboxを利用しています。
 |KEYWORD|プレイリストの検索用キーワードです。|
 |[option]<br>NEW_IMG|任意の指定項目です。<br>指定方法1の場合に利用してください。|
 
-### /dl (/download)
 <a id="dl"></a>
+
+### /dl (/download)
 ```
 /dl [KEYWORD]
 ```
@@ -182,8 +190,9 @@ herokuとdropboxを利用しています。
 |----|----|
 |KEYWORD|プレイリストの検索用キーワードです。|
 
-### /search
 <a id="search"></a>
+
+### /search
 ```
 /search [SEARCH_KEYWORD]
 ```
@@ -192,15 +201,17 @@ herokuとdropboxを利用しています。
 |----|----|
 |SEARCH_KEYWORD|プレイリストの検索用キーワードです。<br>ワイルドカード(*)を使った検索が可能です。|
 
-### /usage
 <a id="usage"></a>
+
+### /usage
 ```
 /usage
 ```
 使い方の案内として、このREADMEへのリンクを返します。
 
-### /ping
 <a id="ping"></a>
+
+### /ping
 ```
 /ping
 ```
