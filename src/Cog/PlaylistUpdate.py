@@ -24,7 +24,7 @@ class PlaylistUpdate(commands.Cog):
     async def update(self, ctx):
         raise commands.BadArgument()
 
-    @update.command(aliases=['f', 'fname', 'file', 'name'])
+    @update.command(aliases=['f', 'file', 'name'])
     async def filename(self, ctx, arg_trg_keyword, arg_filename):
 
         # update filename

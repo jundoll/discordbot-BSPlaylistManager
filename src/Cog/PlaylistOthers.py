@@ -128,10 +128,6 @@ class PlaylistOthers(commands.Cog):
                 traceback.TracebackException.from_exception(orig_error).format()))
 
     # コマンドの作成。コマンドはcommandデコレータで必ず修飾する。
-    @commands.command()
-    async def ping(self, ctx):
-        await ctx.send('pong')
-
     @commands.command(aliases=['dl'])
     async def download(self, ctx, arg_trg_keyword):
 
@@ -153,7 +149,7 @@ class PlaylistOthers(commands.Cog):
         await ctx.send(msg, files=files, embed=embed)
         os.remove("downloadPlaylist.json")
 
-    @ commands.command(aliases=['s'])
+    @ commands.command()
     async def search(self, ctx, arg_search_keyword):
 
         try:
@@ -184,6 +180,10 @@ class PlaylistOthers(commands.Cog):
     @ commands.command()
     async def usage(self, ctx):
         await ctx.send("使い方はこちらを見てね！\nhttps://github.com/jundoll/discordbot-BSPlaylistManager")
+
+    @commands.command()
+    async def ping(self, ctx):
+        await ctx.send('pong')
 
 
 # Bot本体側からコグを読み込む際に呼び出される関数。

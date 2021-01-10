@@ -34,7 +34,7 @@ class PlaylistDelete(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @delete.command(aliases=['p', 'pl'])
+    @delete.command(aliases=['pl'])
     async def playlist(self, ctx, arg_title):
 
         # delete the playlist

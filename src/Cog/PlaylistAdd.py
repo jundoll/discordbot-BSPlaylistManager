@@ -22,8 +22,7 @@ class PlaylistAdd(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def add(self, ctx, arg_keyword, arg_url):
-        '''お試し add'''
-
+        
         # add song to playlist that has the keyword
         try:
             self.playlistApplicationService.addSong(arg_keyword, arg_url)
@@ -35,9 +34,8 @@ class PlaylistAdd(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @add.command(aliases=['p', 'pl'])
+    @add.command(aliases=['pl'])
     async def playlist(self, ctx, arg_title):
-        '''お試し add pl'''
 
         # create new playlist
         try:
@@ -50,7 +48,7 @@ class PlaylistAdd(commands.Cog):
             else:
                 await ctx.send(org_msg.args[0])
 
-    @commands.command(aliases=['reg', 'regist'])
+    @commands.command(aliases=['regist'])
     async def register(self, ctx, arg_keyword, arg_url=""):
 
         # register playlist
