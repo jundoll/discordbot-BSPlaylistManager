@@ -82,9 +82,13 @@ class PlaylistRepository(IPlaylistRepository):
                     for i, playlistID in enumerate(playlistDetailDB["playlistID"]):
                         if deletePlaylistID == playlistID:
                             deleteIndice.append(i)
-                    del playlistDetailDB["detailID"][deleteIndice]
-                    del playlistDetailDB["playlistID"][deleteIndice]
-                    del playlistDetailDB["songID"][deleteIndice]
+                    playlistDetailDB["detailID"] = self._del_list(
+                        playlistDetailDB["detailID"], deleteIndice)
+                    playlistDetailDB["playlistID"] = self._del_list(
+                        playlistDetailDB["playlistID"], deleteIndice)
+                    playlistDetailDB["songID"] = self._del_list(
+                        playlistDetailDB["songID"], deleteIndice)
+
                     # save
                     self.handler.saveJsonFile(
                         playlistDetailDB, self.handler.PLAYLIST_DETAIL_DB_PATH)
@@ -249,11 +253,11 @@ class PlaylistRepository(IPlaylistRepository):
                                 ErrorMessages.uniquePlaylistKeywordErrorMessage())
                         else:
                             playlistDB["keyword"][i] = playlist.keyword.keyword
-                    playlistDB["playlistTitle"][i] = playlist.title.title
-                    playlistDB["playlistAuthor"][i] = playlist.author.author
-                    playlistDB["playlistDescription"][i] = playlist.description.description
-                    playlistDB["image"][i] = playlist.image.image
-                    break
+                            playlistDB["playlistTitle"][i] = playlist.title.title
+                            playlistDB["playlistAuthor"][i] = playlist.author.author
+                            playlistDB["playlistDescription"][i] = playlist.description.description
+                            playlistDB["image"][i] = playlist.image.image
+                            break
 
         # save DB
         self.handler.saveJsonFile(playlistDB, self.handler.PLAYLIST_DB_PATH)
@@ -305,9 +309,12 @@ class PlaylistRepository(IPlaylistRepository):
             if (playlistID.ID == playlistDetailDB["playlistID"][i]) & (songID.ID == playlistDetailDB["songID"][i]):
                 deleteIndice.append(i)
 
-        del playlistDetailDB["detailID"][deleteIndice]
-        del playlistDetailDB["playlistID"][deleteIndice]
-        del playlistDetailDB["songID"][deleteIndice]
+        playlistDetailDB["detailID"] = self._del_list(
+            playlistDetailDB["detailID"], deleteIndice)
+        playlistDetailDB["playlistID"] = self._del_list(
+            playlistDetailDB["playlistID"], deleteIndice)
+        playlistDetailDB["songID"] = self._del_list(
+            playlistDetailDB["songID"], deleteIndice)
 
         # save DB
         self.handler.saveJsonFile(
@@ -336,3 +343,6 @@ class PlaylistRepository(IPlaylistRepository):
         return playlists
 
  # ---------------------
+
+    def _del_list(self, items, del_indexes):
+        return [item for index, item in enumerate(items) if index not in del_indexes]
