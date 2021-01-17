@@ -69,7 +69,8 @@ class PlaylistService:
         songs = []
         for songID in playlist.songIDs:
             hash = self.songRepository.findHashByID(songID)
-            songs.append({"hash": hash.hash.hash})
+            if hash is not None:
+                songs.append({"hash": hash.hash.hash})
 
         # set playlist
         playlistJson = {
